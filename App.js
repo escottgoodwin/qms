@@ -147,17 +147,38 @@ export default class App extends React.Component {
         }
 
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            alert(notification)
-          })
-        this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-          alert(notification)
+            alert('New Question')
         })
+        this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
+          alert('New Question')
+        })
+
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+        // Get the action triggered by the notification being opened
+            const action = notificationOpen.action
+            // Get information about the notification that was opened
+            const notification: Notification = notificationOpen.notification
+            this.props.navigation.navigate('CreateQuestion',{questionId:notification.data.questionId})
+
+        })
+
+        const notificationOpen: NotificationOpen = await firebase.notifications().getInitialNotification()
+         if (notificationOpen) {
+             // App was opened by a notification
+             // Get the action triggered by the notification being opened
+             const action = notificationOpen.action
+             // Get information about the notification that was opened
+             const notification: Notification = notificationOpen.notification
+             this.props.navigation.navigate('CreateQuestion',{questionId:notification.data.questionId})
+
+         }
 
       }
 
       componentWillUnmount() {
           this.notificationDisplayedListener ()
           this.notificationListener()
+          this.notificationOpenedListener()
       }
 
  render() {
