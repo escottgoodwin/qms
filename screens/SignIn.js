@@ -3,7 +3,6 @@ import { AsyncStorage, KeyboardAvoidingView, StyleSheet, Platform, Image, Text, 
 import { Button, Input, Icon, Overlay } from 'react-native-elements'
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
-import fetch from 'node-fetch'
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 
@@ -37,16 +36,10 @@ const setUserId = async (userid) => {
 export default class SignIn extends React.Component {
 
   componentDidMount = async () => {
-        console.log('mounted')
+
         const fcmToken = await firebase.messaging().getToken()
         this.setState({pushToken:fcmToken})
 
-        this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            alert(notification)
-          })
-        this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-          alert(notification)
-        })
       }
 
   static navigationOptions = {

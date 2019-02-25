@@ -11,25 +11,6 @@ export default class Welcome extends React.Component {
     title: 'Welcome',
   };
 
-  componentDidMount = async () => {
-
-    const enabled = await firebase.messaging().hasPermission();
-        if (enabled) {
-
-        } else {
-            // user doesn't have permission
-            try {
-                await firebase.messaging().requestPermission();
-                const fcmToken = await firebase.messaging().getToken()
-                this.setState({pushToken:fcmToken})
-                // User has authorised
-            } catch (error) {
-                // User has rejected permissions
-                alert('No permission for notification');
-            }
-        }
-      }
-
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>

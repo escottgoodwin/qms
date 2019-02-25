@@ -11,6 +11,8 @@ import { split } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
 import { AsyncStorage } from "react-native"
+import firebase from 'react-native-firebase';
+import type { Notification, NotificationOpen } from 'react-native-firebase';
 
 import Welcome from './screens/Welcome';
 import SignIn from './screens/SignIn';
@@ -119,16 +121,50 @@ const AppNavigator = createStackNavigator(
     QuestionsLoader:QuestionsLoader
   },
   {
-    initialRouteName: "Welcome"
+    initialRouteName: "SignIn"
   }
 );
 
 const Container = createAppContainer(AppNavigator);
 
-const App = () => (
-  <ApolloProvider client={client}>
-    <Container />
-  </ApolloProvider>
-);
 
-export default App
+export default class App extends React.Component {
+
+  componentDidMount = async () => {
+
+    const enabled = await firebase.messaging().hasPermission();
+        if (enabled) {
+
+        } else {
+            // user doesn't have permission
+            try {
+                await firebase.messaging().requestPermission();
+                // User has authorised
+            } catch (error) {
+                // User has rejected permissions
+                alert('No permission for notification');
+            }
+        }
+
+        this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
+            alert(notification)
+          })
+        this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
+          alert(notification)
+        })
+
+      }
+
+      componentWillUnmount() {
+          this.notificationDisplayedListener ()
+          this.notificationListener()
+      }
+
+ render() {
+    return (
+      <ApolloProvider client={client}>
+        <Container />
+      </ApolloProvider>
+    );
+  }
+}
