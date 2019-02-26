@@ -147,10 +147,10 @@ export default class App extends React.Component {
         }
 
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            alert('New Question')
+            alert('New Question Displayed',JSON.stringify(notification.data))
         })
         this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-          alert('New Question')
+          alert('New Question Plain',JSON.stringify(notification.data))
         })
 
         this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {

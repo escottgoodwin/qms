@@ -1,7 +1,7 @@
 import React from 'react'
 import { View,StyleSheet } from 'react-native'
 import ContentLoader from 'rn-content-loader';
-
+import Svg,{Rect} from 'react-native-svg'
 
 const TestLoader = () => (
 
