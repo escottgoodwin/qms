@@ -2,6 +2,7 @@ import '@babel/polyfill'
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
+import NavigationService from './NavigationService';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
@@ -147,10 +148,12 @@ export default class App extends React.Component {
         }
 
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            alert('New Question Displayed',JSON.stringify(notification.data))
+            alert('New Question Displayed')
+            console.log('notification')
         })
         this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-          alert('New Question Plain',JSON.stringify(notification.data))
+          alert('New Question Plain')
+          console.log('notification',notification.data.questionId)
         })
 
         this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
@@ -158,7 +161,8 @@ export default class App extends React.Component {
             const action = notificationOpen.action
             // Get information about the notification that was opened
             const notification: Notification = notificationOpen.notification
-            this.props.navigation.navigate('CreateQuestion',{questionId:notification.data.questionId})
+            console.log('click on',notification.data.questionId)
+            NavigationService.navigate('CreateQuestion',{ questionId: notification.data.questionId })
 
         })
 
@@ -169,10 +173,9 @@ export default class App extends React.Component {
              const action = notificationOpen.action
              // Get information about the notification that was opened
              const notification: Notification = notificationOpen.notification
-             this.props.navigation.navigate('CreateQuestion',{questionId:notification.data.questionId})
+             console.log('notification initial',notificationOpen.data.questionId)
 
          }
-
       }
 
       componentWillUnmount() {
@@ -184,7 +187,11 @@ export default class App extends React.Component {
  render() {
     return (
       <ApolloProvider client={client}>
-        <Container />
+      <Container
+        ref={navigatorRef => {
+          NavigationService.setTopLevelNavigator(navigatorRef);
+        }}
+      />
       </ApolloProvider>
     );
   }
