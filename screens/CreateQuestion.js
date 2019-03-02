@@ -118,7 +118,7 @@ export default class CreateQuestion extends React.Component {
       <Query query={CREATE_QUESTION_QUERY} variables={{ questionId: questionId1 }}>
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading />
-              if (error) return <Error {...error}/>
+              if (error) return <Error {...error} />
 
               const questionToRender = data.question
 
@@ -144,7 +144,12 @@ export default class CreateQuestion extends React.Component {
 
              <Choice
              changetext={(text) => this.setState({choice1:text})}
-             changecheck={() => this.setState({choiceCorrect1: !this.state.choiceCorrect1})}
+             changecheck={() => this.setState({
+               choiceCorrect1:true,
+               choiceCorrect2:false,
+               choiceCorrect3:false,
+               choiceCorrect4:false
+             })}
              choiceValue={this.state.choice1}
              choiceCorrect={this.state.choiceCorrect1}
              placeholder='Choice 1'
@@ -152,7 +157,12 @@ export default class CreateQuestion extends React.Component {
 
              <Choice
              changetext={(text) => this.setState({choice2:text})}
-             changecheck={() => this.setState({choiceCorrect2: !this.state.choiceCorrect2})}
+             changecheck={() => this.setState({
+               choiceCorrect1:false,
+               choiceCorrect2:true,
+               choiceCorrect3:false,
+               choiceCorrect4:false
+             })}
              choiceValue={this.state.choice2}
              choiceCorrect={this.state.choiceCorrect2}
              placeholder='Choice 2'
@@ -160,7 +170,12 @@ export default class CreateQuestion extends React.Component {
 
              <Choice
              changetext={(text) => this.setState({choice3:text})}
-             changecheck={() => this.setState({choiceCorrect3: !this.state.choiceCorrect3})}
+             changecheck={() => this.setState({
+               choiceCorrect1:false,
+               choiceCorrect2:false,
+               choiceCorrect3:true,
+               choiceCorrect4:false
+             })}
              choiceValue={this.state.choice3}
              choiceCorrect={this.state.choiceCorrect3}
              placeholder='Choice 3'
@@ -168,7 +183,12 @@ export default class CreateQuestion extends React.Component {
 
              <Choice
              changetext={(text) => this.setState({choice4:text})}
-             changecheck={() => this.setState({choiceCorrect4: !this.state.choiceCorrect4})}
+             changecheck={() => this.setState({
+               choiceCorrect1:false,
+               choiceCorrect2:false,
+               choiceCorrect3:false,
+               choiceCorrect4:true
+             })}
              choiceValue={this.state.choice4}
              choiceCorrect={this.state.choiceCorrect4}
              placeholder='Choice 4'
