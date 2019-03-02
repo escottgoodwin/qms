@@ -164,12 +164,12 @@ export default class App extends React.Component {
         }
 
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-          NavigationService.navigate('MyModal',{ questionId: notification.data.questionId })
+          NavigationService.navigate('MyModal',{ questionId1: notification.data.questionId })
             console.log('notification')
         })
         this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
           console.log('notification',notification.data.questionId)
-          NavigationService.navigate('MyModal',{ questionId: notification.data.questionId, course: notification.data.course, institution: notification.data.institution, testNumber: notification.data.testNumber, subject: notification.data.subject })
+          NavigationService.navigate('MyModal',{ questionId1: notification.data.questionId, course: notification.data.course, institution: notification.data.institution, testNumber: notification.data.testNumber, subject: notification.data.subject })
         })
 
         this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
@@ -178,7 +178,7 @@ export default class App extends React.Component {
             // Get information about the notification that was opened
             const notification: Notification = notificationOpen.notification
             console.log('click on',notification.data.questionId)
-            NavigationService.navigate('CreateQuestion',{ questionId: notification.data.questionId })
+            NavigationService.navigate('CreateQuestion',{ questionId1: notification.data.questionId })
 
         })
 

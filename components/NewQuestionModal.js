@@ -7,7 +7,7 @@ export default class NewQuestionModal extends React.Component {
   render() {
     const { navigation } = this.props;
 
-    const questionId = navigation.getParam('questionId', 'NO-ID')
+    const questionId1 = navigation.getParam('questionId1', 'NO-ID')
     const course = navigation.getParam('course', 'NO-ID')
     const institution = navigation.getParam('institution', 'NO-ID')
     const testNumber = navigation.getParam('testNumber', 'NO-ID')
@@ -34,7 +34,7 @@ export default class NewQuestionModal extends React.Component {
     <Button
         title="Answer"
         color="lightblue"
-        onPress={() => navigation.navigate('CreateQuestion',{ questionId: questionId })}
+        onPress={() => navigation.navigate('CreateQuestion',{ questionId: questionId1 })}
        />
 
     </View>
