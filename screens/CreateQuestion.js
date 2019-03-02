@@ -78,7 +78,6 @@ export default class CreateQuestion extends React.Component {
   };
 
   state = {
-    questionId:'',
     testId:'',
     panelId:'',
     question:'',
@@ -97,7 +96,7 @@ export default class CreateQuestion extends React.Component {
   render(){
     const { navigation } = this.props
 
-    const questionId1 = 'cjru9sva0007u0826swkes27t'
+    const questionId1 = this.props.navigation.getParam('questionId1', 'NO-ID')
 
     const {
     question,
@@ -244,8 +243,7 @@ export default class CreateQuestion extends React.Component {
   _confirm = (data) => {
     const { id, test } = data.createQuestion
     const { navigation } = this.props;
-    const questionId = 'cjrr295lj00380859es8ey4eh'
-    this.props.navigation.navigate('ReviewQuestion',{ newQuestionId: id, oldQuestionId: questionId, testId: test.id })
+    this.props.navigation.navigate('ReviewQuestion',{ newQuestionId: id, oldQuestionId: questionId1, testId: test.id })
     }
 
 }

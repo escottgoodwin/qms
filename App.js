@@ -190,7 +190,7 @@ export default class App extends React.Component {
              // Get information about the notification that was opened
              const notification: Notification = notificationOpen.notification
              console.log('notification initial',notificationOpen.data.questionId)
-             NavigationService.navigate('CreateQuestion',{ questionId: notification.data.questionId })
+             NavigationService.navigate('CreateQuestion',{ questionId1: notification.data.questionId })
 
          }
       }

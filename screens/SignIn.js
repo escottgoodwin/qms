@@ -71,7 +71,6 @@ export default class SignIn extends React.Component {
       <SignInHeader
       title='Quandria Sign In'
       />
-      
 
       <View>
       {isVisibleGraph &&

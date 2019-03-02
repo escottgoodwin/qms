@@ -34,7 +34,7 @@ export default class NewQuestionModal extends React.Component {
     <Button
         title="Answer"
         color="lightblue"
-        onPress={() => navigation.navigate('CreateQuestion',{ questionId: questionId1 })}
+        onPress={() => navigation.navigate('CreateQuestion',{ questionId1: questionId1 })}
        />
 
     </View>
