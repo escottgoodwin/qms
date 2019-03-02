@@ -83,7 +83,7 @@ answerRandom = (questions) =>  {
             ({ item, index }) => (
               <TouchableOpacity style={styles.choice}
               onPress={() => this.props.navigation.navigate('AnswerQuestion',{questionId:item.id })}>
-               <Text style={{fontSize:16,marginBottom:3}} >
+               <Text style={{fontSize:18,marginBottom:3}} >
                {item.question}
                </Text>
 
@@ -93,12 +93,13 @@ answerRandom = (questions) =>  {
           }
           keyExtractor={item => item.id}
           />
-
+          <View style={{margin:10}}>
           <ButtonColor
           title="Test Dashboard"
           backgroundcolor="#282828"
           onpress={() => this.props.navigation.navigate('TestDashboard',{ testId:testId })}
           />
+          </View>
           </ScrollView >
         </View>
       )

@@ -14,6 +14,7 @@ import { ApolloProvider } from 'react-apollo';
 import { AsyncStorage } from "react-native"
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
+import { fromTop, fadeIn } from 'react-navigation-transitions'
 
 import Welcome from './screens/Welcome';
 import SignIn from './screens/SignIn';
@@ -32,11 +33,8 @@ import ChallengeDashboard from './screens/ChallengeDashboard'
 import Challenge from './screens/Challenge'
 import UserQs from './screens/UserQs'
 import UserAnswers from './screens/UserAnswers'
+import NewQuestionModal from './components/NewQuestionModal'
 
-
-import QuestionsLoader from './components/QuestionsLoader'
-
-const token1 = 'asdf'
 const getToken = async () => {
   const token = await AsyncStorage.getItem('AUTH_TOKEN')
   return token
@@ -97,7 +95,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-const AppNavigator = createStackNavigator(
+const MainStack = createStackNavigator(
   {
     Welcome: Welcome,
     SignIn: SignIn,
@@ -106,10 +104,7 @@ const AppNavigator = createStackNavigator(
     StudentDashboard: StudentDashboard,
     CourseDashboard: CourseDashboard,
     TestDashboard: TestDashboard,
-    CreateQuestion: {
-      screen: CreateQuestion,
-      path: 'question/:questionId',
-    },
+    CreateQuestion: CreateQuestion,
     EditQuestion: EditQuestion,
     ReviewQuestion: ReviewQuestion,
     AnswerQuestion: AnswerQuestion,
@@ -119,17 +114,38 @@ const AppNavigator = createStackNavigator(
     Challenge:Challenge,
     UserQs:UserQs,
     UserAnswers:UserAnswers,
-    QuestionsLoader:QuestionsLoader
   },
   {
-    initialRouteName: "SignIn"
+    initialRouteName: "SignIn",
+  }
+)
+
+
+const RootStack = createStackNavigator(
+  {
+    Main: {
+      screen: MainStack,
+    },
+    MyModal: {
+      screen: NewQuestionModal,
+    },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+    transparentCard:true,
+    transitionConfig: () => fromTop()
   }
 );
 
-const Container = createAppContainer(AppNavigator);
-
+const Container = createAppContainer(RootStack);
 
 export default class App extends React.Component {
+
+  state = {
+    isVisible:false,
+    questionId: ''
+  }
 
   componentDidMount = async () => {
 
@@ -148,12 +164,12 @@ export default class App extends React.Component {
         }
 
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-            alert('New Question Displayed')
+          NavigationService.navigate('MyModal',{ questionId: notification.data.questionId })
             console.log('notification')
         })
         this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-          alert('New Question Plain')
           console.log('notification',notification.data.questionId)
+          NavigationService.navigate('MyModal',{ questionId: notification.data.questionId, course: notification.data.course, institution: notification.data.institution, testNumber: notification.data.testNumber, subject: notification.data.subject })
         })
 
         this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
@@ -174,6 +190,7 @@ export default class App extends React.Component {
              // Get information about the notification that was opened
              const notification: Notification = notificationOpen.notification
              console.log('notification initial',notificationOpen.data.questionId)
+             NavigationService.navigate('CreateQuestion',{ questionId: notification.data.questionId })
 
          }
       }

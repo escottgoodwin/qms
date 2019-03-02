@@ -8,6 +8,7 @@ import type { Notification, NotificationOpen } from 'react-native-firebase';
 
 import ButtonColor from '../components/ButtonColor'
 import SignInHeader from '../components/SignInHeader'
+import NewQuestionModal from '../components/NewQuestionModal'
 
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!, $pushToken: String) {
@@ -70,28 +71,31 @@ export default class SignIn extends React.Component {
       <SignInHeader
       title='Quandria Sign In'
       />
+      
 
       <View>
       {isVisibleGraph &&
-        <>
-        <Text style={styles.messages}>Something is wrong!</Text>
-        <Text style={styles.messages}>{graphQLError}</Text>
-        </>
-
+        <View style={styles.warning}>
+        <Icon
+        name='exclamation-triangle'
+        type='font-awesome'
+        color='#bb6a6a' />
+        <Text style={styles.messages}>
+         {graphQLError}
+         </Text>
+        </View>
       }
 
       {isVisibleNet &&
-        <>
-        <Text style={styles.messages}>Something is wrong!</Text>
+        <View style={styles.warning}>
         <Text style={styles.messages}>{networkError}</Text>
-        </>
-
+        </View>
       }
       </View>
 
     <TextInput
      placeholder='Email'
-     style={styles.button}
+     style={styles.input}
      onChangeText={(text) => this.setState({email:text})}
      value={email}
      autoCapitalize='none'
@@ -100,12 +104,13 @@ export default class SignIn extends React.Component {
 
      <TextInput
       placeholder='Password'
-      style={styles.button}
+      style={styles.input}
       onChangeText={(text) => this.setState({password:text})}
       value={password}
       autoCapitalize='none'
+      secureTextEntry={true}
       />
-
+      <View style={{margin:10}}>
       <Mutation
           mutation={LOGIN_MUTATION}
           variables={{ email:email, password:password, pushToken: this.state.pushToken }}
@@ -120,7 +125,7 @@ export default class SignIn extends React.Component {
             />
           )}
         </Mutation>
-
+        </View>
 
       </KeyboardAvoidingView>
     )
@@ -159,19 +164,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#e4f1fe',
   },
-  button:
-  {
+  input:{
+    fontSize:18,
     height: 50,
-    width: 300,
+    width: '80%',
     backgroundColor:'white',
-    borderRadius: 15,
+    borderRadius: 5,
     margin:10,
     paddingLeft:20
   },
-  messages: {
-    padding:30,
-    fontSize:18,
-    textAlign:'center',
-    color:'red'
+  button:{
+    height: 50,
+    width: '85%',
+    borderRadius: 10,
+    margin:10,
   },
+  messages: {
+    padding:15,
+    fontSize:18,
+    color:'#bb6a6a'
+  },
+  warning: {
+    backgroundColor:'#fff6f6',
+    borderRadius: 5,
+    borderColor:'#bb6a6a',
+    borderWidth:1,
+    width: 300,
+    padding:5,
+    flexDirection:'row',
+    alignItems: 'center',
+    textAlign:'center',
+    padding:5
+  }
 });

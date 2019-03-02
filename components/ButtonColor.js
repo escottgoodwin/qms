@@ -1,10 +1,9 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions,View } from 'react-native';
 import PropTypes from 'prop-types';
 import { Button } from 'react-native-elements'
 
 const ButtonColor = (props) =>
-
 <Button
 raised
   title={props.title}
@@ -14,8 +13,7 @@ raised
   height: 45,
   borderColor: "transparent",
   borderWidth: 0,
-  borderRadius: 25,
-  margin:10,
+  borderRadius: 10,
   }}
   onPress={props.onpress}
 />

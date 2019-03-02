@@ -185,6 +185,7 @@ export default class CreateQuestion extends React.Component {
              }
              </View>
 
+             <View style={{margin:10}}>
              <Mutation
                  mutation={CREATE_QUESTION_MUTATION}
                  variables={{
@@ -204,19 +205,24 @@ export default class CreateQuestion extends React.Component {
                  onError={error => this._error (error)}
                >
                  {mutation => (
+
                    <ButtonColor
                    title="Review"
                    backgroundcolor="#282828"
                    onpress={mutation}
                    />
+
                  )}
                </Mutation>
+               </View>
 
+            <View style={{margin:10}}>
              <ButtonColor
              title="Cancel"
              backgroundcolor="#282828"
              onpress={() => this.props.navigation.navigate('StudentDashboard')}
              />
+             </View>
              </>
            )
          }}

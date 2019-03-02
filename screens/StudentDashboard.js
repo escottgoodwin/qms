@@ -130,20 +130,23 @@ class StudentDashboard extends React.Component {
                     navigation={this.props.navigation}
                         />
 
+                    <View style={{margin:10}}>
                     <Mutation
                         mutation={LOGOUT_MUTATION}
                         variables={{ userId:userid }}
                         onCompleted={data => this._confirm(data)}
                       >
                         {mutation => (
+
                           <ButtonColor
                           title="Sign Out"
                           backgroundcolor="#282828"
                           onpress={mutation}
                           />
+
                         )}
                       </Mutation>
-
+                      </View>
 
                     </>
                       )
