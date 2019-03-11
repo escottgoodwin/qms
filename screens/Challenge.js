@@ -111,7 +111,7 @@ export default class Challenge extends React.Component {
               Your Choice: {challenge.answer.answer.choice}
             </Text>
 
-            <Image key={challenge.answer.answer.question.panel.link} source={{uri: challenge.answer.answer.question.panel.link }} style={styles.logo} />
+            <Image key={challenge.answer.answer.question.panel.link} source={{uri: challenge.answer.answer.question.panel.link }} style={{ height:210}} />
 
             <Text style={styles.choice}>
               Challenge: {challenge.challenge}

@@ -24,6 +24,7 @@ import StudentDashboard from './screens/StudentDashboard';
 import CourseDashboard from './screens/CourseDashboard';
 import TestDashboard from './screens/TestDashboard';
 import CreateQuestion from './screens/CreateQuestion';
+import CreateQuestion1 from './screens/CreateQuestion1';
 import EditQuestion from './screens/EditQuestion';
 import ReviewQuestion from './screens/ReviewQuestion';
 import AnswerQuestion from './screens/AnswerQuestion';
@@ -105,6 +106,7 @@ const MainStack = createStackNavigator(
     CourseDashboard: CourseDashboard,
     TestDashboard: TestDashboard,
     CreateQuestion: CreateQuestion,
+    CreateQuestion1: CreateQuestion1,
     EditQuestion: EditQuestion,
     ReviewQuestion: ReviewQuestion,
     AnswerQuestion: AnswerQuestion,

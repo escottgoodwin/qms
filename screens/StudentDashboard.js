@@ -130,7 +130,15 @@ class StudentDashboard extends React.Component {
                     navigation={this.props.navigation}
                         />
 
-                    <View style={{margin:10}}>
+                    <View style={{padding:15}}>
+                    <ButtonColor
+                    title="Create Question"
+                    backgroundcolor="#003366"
+                    onpress={() => this.props.navigation.navigate('CreateQuestion1',{questionId1:"cjrs6g0y100150823cnplky2x"})}
+                    />
+                    </View>
+
+                    <View style={{padding:15}}>
                     <Mutation
                         mutation={LOGOUT_MUTATION}
                         variables={{ userId:userid }}

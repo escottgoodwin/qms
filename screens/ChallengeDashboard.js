@@ -127,7 +127,6 @@ export default class ChallengeDashboard extends React.Component {
           value={this.state.challenge}
          />
 
-         <View>
          {isVisible &&
            <>
            <Text style={styles.messages}>Something is wrong!</Text>
@@ -135,7 +134,6 @@ export default class ChallengeDashboard extends React.Component {
            </>
 
          }
-         </View>
 
          <Mutation
              mutation={CREATE_CHALLENGE_MUTATION}
@@ -223,7 +221,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   logo: {
-    margin:15
+    margin:15,
+    height:210
   },
   input:{
     height: 40,

@@ -16,7 +16,7 @@ import { View, Text, StyleSheet } from 'react-native'
 
       <View style={{padding:15}}>
       {props.networkError !== null &&
-        <Text key={error.message} style={{color:'red',fontSize:16}}>{props.networkError.message}</Text>}
+        <Text key={props.networkError.message} style={{color:'red',fontSize:16}}>{props.networkError.message}</Text>}
       </View>
 
       </View>

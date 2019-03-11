@@ -69,11 +69,13 @@ answerRandom = (questions) =>  {
         <ScrollView >
           <TestHeader testId={testId}/>
 
+          <View style={{padding:15}}>
           <ButtonColor
           title="Answer Random Question"
           backgroundcolor="#003366"
           onpress={() => this.answerRandom(testToRender.questions)}
           />
+          </View>
 
           <Text>{this.state.randomQ} </Text>
 

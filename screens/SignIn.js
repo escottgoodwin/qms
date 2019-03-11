@@ -109,7 +109,17 @@ export default class SignIn extends React.Component {
       autoCapitalize='none'
       secureTextEntry={true}
       />
-      <View style={{margin:10}}>
+
+      <View style={{padding:15}}>
+      <ButtonColor
+      title="Create Question"
+      backgroundcolor="#003366"
+      onpress={() => this.props.navigation.navigate('CreateQuestion1',{questionId1:"cjru7gdd3001w0826731lgf93"})}
+      />
+      </View>
+
+
+      <View style={{padding:15}}>
       <Mutation
           mutation={LOGIN_MUTATION}
           variables={{ email:email, password:password, pushToken: this.state.pushToken }}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView, TextInput, Alert} from 'react-native';
+import { StyleSheet, Dimensions, Platform, Image, Text, View, ScrollView, TextInput, Alert} from 'react-native';
 import { Button } from 'react-native-elements'
 
 import { Query, Mutation } from "react-apollo";
@@ -26,8 +26,10 @@ query CreateQuestionQuery($questionId:ID!){
       testDate
       testNumber
       course{
+        id
         name
         institution{
+          id
           name
         }
       }
@@ -125,14 +127,14 @@ export default class CreateQuestion extends React.Component {
           return (
             <>
             <TestHeader testId={questionToRender.test.id}/>
-
+            <View style={{padding:5}}>
             <Text style={styles.welcome}>
-              Answer Question
+              Create Question
             </Text>
+            <Image source={{uri: questionToRender.sentPanel.link }} style={{ height:210,margin:10,}} />
+            </View>
 
-            <Image style={{margin:10}} key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
-
-            <View style={{margin:10}}>
+            <View style={{padding:5}}>
             <TextInput
               placeholder='Question'
               style={styles.question}
@@ -143,7 +145,7 @@ export default class CreateQuestion extends React.Component {
              />
              </View>
 
-             <View style={{margin:10}}>
+             <View style={{padding:5}}>
              <Choice
              changetext={(text) => this.setState({choice1:text})}
              changecheck={() => this.setState({
@@ -195,8 +197,7 @@ export default class CreateQuestion extends React.Component {
              choiceCorrect={this.state.choiceCorrect4}
              placeholder='Choice 4'
              />
-
-             </View>
+              </View>
 
              <View>
              {isVisible &&
@@ -208,7 +209,7 @@ export default class CreateQuestion extends React.Component {
              }
              </View>
 
-             <View style={{margin:10}}>
+             <View style={styles.button} >
              <Mutation
                  mutation={CREATE_QUESTION_MUTATION}
                  variables={{
@@ -229,17 +230,15 @@ export default class CreateQuestion extends React.Component {
                >
                  {mutation => (
 
-                   <ButtonColor
+                  <ButtonColor
                    title="Review"
                    backgroundcolor="#282828"
                    onpress={mutation}
                    />
-
                  )}
                </Mutation>
                </View>
-
-            <View style={{margin:10}}>
+               <View style={styles.button} >
              <ButtonColor
              title="Cancel"
              backgroundcolor="#282828"
@@ -283,6 +282,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 5,
   },
+  button:{
+    padding:15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   messages: {
     padding:30,
     fontSize:18,
@@ -301,7 +305,6 @@ const styles = StyleSheet.create({
   },
   question:{
     height: 80,
-    width: "85%",
     backgroundColor:'white',
     borderRadius: 10,
     margin:5,
