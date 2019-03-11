@@ -14,7 +14,7 @@ import { ApolloProvider } from 'react-apollo';
 import { AsyncStorage } from "react-native"
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
-import { fromTop, fadeIn } from 'react-navigation-transitions'
+import { fromTop, fromBottom, fadeIn } from 'react-navigation-transitions'
 
 import Welcome from './screens/Welcome';
 import SignIn from './screens/SignIn';
@@ -119,6 +119,7 @@ const MainStack = createStackNavigator(
   },
   {
     initialRouteName: "SignIn",
+    transitionConfig: () => fadeIn()
   }
 )
 
