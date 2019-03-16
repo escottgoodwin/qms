@@ -1,49 +1,45 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import { Button, Card } from 'react-native-elements'
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
+import React from 'react'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { Button } from 'react-native-elements'
+import { Query } from "react-apollo"
 import dateFormat from 'dateformat'
 
-import SpinnerLoading from '../components/SpinnerLoading'
+import { container, welcome } from '../css'
+
+import {TEST_QUERY} from '../ApolloQueries'
+
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import TestCard from '../components/TestCard'
 import ButtonColor from '../components/ButtonColor'
 import AnsweredStats from '../components/AnsweredStats'
 import QuestionStats from '../components/QuestionStats'
 import TestHeader from '../components/TestHeader'
-
-const TEST_QUERY = gql`
-query TestQuery($test_id:ID!){
-  test(id:$test_id){
-      id
-      subject
-      testNumber
-      testDate
-      release
-      releaseDate
-      published
-      publishDate
-    	course{
-        id
-        name
-        courseNumber
-      }
-      panels{
-        id
-    }
-    }
-  }
-`
+import Error from '../components/Error'
 
 export default class TestDashboard extends React.Component {
 
   static navigationOptions = {
     title: 'Test',
-  };
+  }
 
+  componentDidMount = async () => {
+
+    const testId = navigation.getParam('testId', 'NO-ID')
+    try {
+      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+      if (!token) {
+        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'TestDashboard',reDirectParams:{testId}})
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+  }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation } = this.props
 
     const testId = navigation.getParam('testId', 'NO-ID')
 
@@ -52,21 +48,23 @@ export default class TestDashboard extends React.Component {
       <ScrollView>
       <Query query={TEST_QUERY} variables={{ test_id: testId }}>
             {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading  />
-              if (error) return <Text>Error</Text>
+              if (loading) return <SpinnerLoading1  />
+              if (error) return <Error {...error}/>
 
               const testToRender = data.test
 
           return (
-            <>
+          <>
           <TestHeader testId={testId}/>
           <Text style={styles.welcome}>
             { dateFormat(testToRender.testDate, "dddd, mmmm dS, yyyy") }
           </Text>
           <ScrollView>
+
           <AnsweredStats navigation={this.props.navigation} testId={testId} />
 
           <QuestionStats navigation={this.props.navigation} testId={testId} />
+
           </ScrollView>
           <View style={{margin:10}}>
             <ButtonColor
@@ -88,29 +86,13 @@ export default class TestDashboard extends React.Component {
       }}
     </Query>
 
-      </ScrollView>
-      </View>
-    );
+    </ScrollView>
+    </View>
+    )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-    fontSize:18
-  }
-
-});
+  container,
+  welcome
+})

@@ -1,83 +1,41 @@
-import React from 'react';
-import { StyleSheet, Dimensions, Platform, Image, Text, View, ScrollView, TextInput, Alert} from 'react-native';
-import { Button } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, Image, Text, View, ScrollView, TextInput, AsyncStorage } from 'react-native'
 
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { Query, Mutation } from "react-apollo"
+
+import { container, welcome, button, question } from '../css'
+
+import {CREATE_QUESTION_QUERY,CREATE_QUESTION_MUTATION} from '../ApolloQueries'
 
 import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
-import SpinnerLoading from '../components/SpinnerLoading'
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import Error from '../components/Error'
+import ErrorMutation from '../components/ErrorMutation'
 import TestHeader from '../components/TestHeader'
-
-const CREATE_QUESTION_QUERY = gql`
-query CreateQuestionQuery($questionId:ID!){
-  question(id:$questionId){
-    id
-    question
-    sentPanel{
-      link
-      id
-    }
-    test{
-      id
-      subject
-      testDate
-      testNumber
-      course{
-        id
-        name
-        institution{
-          id
-          name
-        }
-      }
-    }
-  }
-}
-`
-
-const CREATE_QUESTION_MUTATION = gql`
-mutation CreateQuestion(
-  $question: String!,
-  $testId:ID!,
-  $panelId:ID!,
-  $choice1:String!,
-  $choiceCorrect1: Boolean!,
-  $choice2:String!,
-  $choiceCorrect2: Boolean!,
-  $choice3:String!,
-  $choiceCorrect3: Boolean!,
-  $choice4:String!,
-  $choiceCorrect4: Boolean!,
-  ){
-    createQuestion(
-      question: $question,
-      testId:$testId,
-      panelId:$panelId,
-      choice1: $choice1,
-      choiceCorrect1: $choiceCorrect1,
-      choice2: $choice2,
-      choiceCorrect2: $choiceCorrect2,
-      choice3: $choice3,
-      choiceCorrect3: $choiceCorrect3,
-      choice4: $choice4,
-      choiceCorrect4: $choiceCorrect4,
-    ){
-        id
-        test{
-          id
-        }
-      }
-    }
-  `
 
 export default class CreateQuestion extends React.Component {
 
   static navigationOptions = {
     title: 'Create Question',
-  };
+  }
+
+  componentDidMount = async () => {
+
+    const questionId1 = this.props.navigation.getParam('questionId1', 'NO-ID')
+    try {
+      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+      if (!token) {
+        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'CreateQuestion1',reDirectParams:{questionId1}})
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+  }
+
 
   state = {
     testId:'',
@@ -91,13 +49,15 @@ export default class CreateQuestion extends React.Component {
     choiceCorrect3:false,
     choice4:'',
     choiceCorrect4:false,
-    isVisible: false,
-    errorMessage:''
-  };
+    graphQLError: '',
+    isVisibleGraph:false,
+    networkError:'',
+    isVisibleNet:false,
+    questionId1:''
+  }
 
   render(){
     const { navigation } = this.props
-
     const questionId1 = this.props.navigation.getParam('questionId1', 'NO-ID')
 
     const {
@@ -110,16 +70,19 @@ export default class CreateQuestion extends React.Component {
     choiceCorrect3,
     choice4,
     choiceCorrect4,
-    isVisible,
-    errorMessage
+    graphQLError,
+    networkError,
+    isVisibleNet,
+    isVisibleGraph
     } = this.state
+
 
     return(
       <View style={styles.container}>
       <ScrollView >
       <Query query={CREATE_QUESTION_QUERY} variables={{ questionId: questionId1 }}>
             {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
+              if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error} />
 
               const questionToRender = data.question
@@ -131,7 +94,7 @@ export default class CreateQuestion extends React.Component {
             <Text style={styles.welcome}>
               Create Question
             </Text>
-            <Image source={{uri: questionToRender.sentPanel.link }} style={{ height:210,margin:10,}} />
+            <Image source={{uri: questionToRender.sentPanel.link }} style={{ margin:10, width:'95%',height:200, resizeMode: "contain",}} />
             </View>
 
             <View style={{padding:5}}>
@@ -199,15 +162,9 @@ export default class CreateQuestion extends React.Component {
              />
               </View>
 
-             <View>
-             {isVisible &&
-               <>
-               <Text style={styles.messages}>Something is wrong!</Text>
-               <Text style={styles.messages}>{errorMessage}</Text>
-               </>
+              {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
 
-             }
-             </View>
+              {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
 
              <View style={styles.button} >
              <Mutation
@@ -238,12 +195,15 @@ export default class CreateQuestion extends React.Component {
                  )}
                </Mutation>
                </View>
+
                <View style={styles.button} >
+
              <ButtonColor
              title="Cancel"
              backgroundcolor="#282828"
              onpress={() => this.props.navigation.navigate('StudentDashboard')}
              />
+             
              </View>
              </>
            )
@@ -255,81 +215,26 @@ export default class CreateQuestion extends React.Component {
   }
 
   _error = async error => {
-      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
-      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
-      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
 
-      this.setState({ isVisible: true, errorMessage})
+      const gerrorMessage = error.graphQLErrors.map((err,i) => err.message)
+      this.setState({ isVisibleGraph: true, graphQLError: gerrorMessage})
+
+      error.networkError &&
+        this.setState({ isVisibleNet: true, networkError: error.networkError.message})
+
   }
 
   _confirm = (data) => {
     const { id, test } = data.createQuestion
-    const { navigation } = this.props;
+    const { navigation } = this.props
     this.props.navigation.navigate('ReviewQuestion',{ newQuestionId: id, oldQuestionId: questionId1, testId: test.id })
     }
 
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 5,
-  },
-  button:{
-    padding:15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  messages: {
-    padding:30,
-    fontSize:18,
-    textAlign:'center',
-    color:'red'
-  },
-  choices:{
-    flexDirection:"row",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  choicetext:{
-    fontWeight:'bold',
-    fontSize:18,
-    color:'#484848'
-  },
-  question:{
-    height: 80,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  },
-  input:{
-    height: 40,
-    width: 250,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  },
-  messages: {
-    padding:30,
-    fontSize:18,
-    textAlign:'center',
-    color:'red'
-  },
-  answer:{
-    height: 40,
-    width: 100,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  }
-});
+  container,
+  welcome,
+  button,
+  question
+})

@@ -1,54 +1,42 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView,TextInput, Alert} from 'react-native';
-import { Button } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, ScrollView } from 'react-native'
 
+import { Query } from "react-apollo"
 
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { container } from '../css'
+
+import {EDIT_QUESTION_QUERY} from '../ApolloQueries'
 
 import ButtonColor from '../components/ButtonColor'
-import Choice from '../components/Choice'
-import SpinnerLoading from '../components/SpinnerLoading'
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import Error from '../components/Error'
 import EditQuestionForm from '../components/EditQuestionForm'
-
-const EDIT_QUESTION_QUERY = gql`
-query EditQuestionQuery($questionId:ID!){
-  question(id:$questionId){
-    id
-    question
-    choices{
-      id
-      choice
-      correct
-    }
-    panel{
-      link
-    }
-    test{
-      id
-      subject
-      testDate
-      testNumber
-      course{
-        name
-        institution{
-          name
-        }
-      }
-    }
-  }
-}
-`
 
 export default class EditQuestion extends React.Component {
 
   static navigationOptions = {
     title: 'Edit Question',
-  };
+  }
+
+  componentDidMount = async () => {
+
+    const questionId = navigation.getParam('questionId', 'NO-ID')
+
+    try {
+      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+      if (!token) {
+        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'EditQuestion',reDirectParams:{questionId}})
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+  }
 
   render(){
-    const { navigation } = this.props;
+    const { navigation } = this.props
 
     const questionId = navigation.getParam('questionId', 'NO-ID')
 
@@ -56,7 +44,7 @@ export default class EditQuestion extends React.Component {
       <ScrollView contentContainerStyle={styles.container}>
       <Query query={EDIT_QUESTION_QUERY} variables={{ questionId: questionId }}>
             {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
+              if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error}/>
 
               const questionToRender = data.question
@@ -81,56 +69,5 @@ export default class EditQuestion extends React.Component {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-    minHeight:800
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 5,
-  },
-  logo: {
-    height: 220,
-    marginBottom: 15,
-    marginTop: 15,
-    width: 350,
-  },
-  choices:{
-    flexDirection:"row",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  choicetext:{
-    fontWeight:'bold',
-    fontSize:18,
-    color:'#484848'
-  },
-  question:{
-    height: 80,
-    width: 350,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  },
-  input:{
-    height: 40,
-    width: 250,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  },
-  answer:{
-    height: 40,
-    width: 100,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  }
-});
+  container
+})

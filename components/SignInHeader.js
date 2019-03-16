@@ -1,10 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { Button } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, Text, View, Image } from 'react-native'
 
 const SignInHeader = (props) =>
-
 
 <View style={styles.container}>
   <Image source={require('../assets/quandria_welcome.png')} style={[styles.logo]}/>
@@ -31,10 +28,6 @@ const SignInHeader = (props) =>
       marginBottom: 16,
       marginTop: 32,
     },
-  });
-
-  SignInHeader.propTypes = {
-    title: PropTypes.string.isRequired,
-  };
+  })
 
 export default SignInHeader

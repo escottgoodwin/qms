@@ -1,76 +1,58 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, Text, Dimensions, View, ScrollView,TextInput,Alert} from 'react-native';
+import React from 'react'
+import { StyleSheet, Platform, Image, Text, Dimensions, View, ScrollView,TextInput,Alert} from 'react-native'
 import { Button, Icon, Divider } from 'react-native-elements'
 
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { Query, Mutation } from "react-apollo"
+
+import { container, question, panel } from '../css'
 
 import QuestionChoices from '../components/QuestionChoices'
 import ReviewChoice from '../components/ReviewChoice'
 
+import {QUESTION_QUERY,
+        SEND_QUESTION_MUTATION} from '../ApolloQueries'
+
 import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
-import SpinnerLoading from '../components/SpinnerLoading'
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import Error from '../components/Error'
-
-
-const QUESTION_QUERY = gql`
-  query CreateReviewQuery($questionId:ID!){
-    question(id:$questionId){
-      id
-      question
-      choices {
-        id
-        choice
-        correct
-      }
-      panel{
-        link
-        id
-      }
-      test{
-        id
-        subject
-        course{
-          name
-          institution{
-            name
-          }
-        }
-      }
-    }
-  }
-`
-
-const SEND_QUESTION_MUTATION = gql`
-  mutation SendQuestion($testId: ID!, $questionId:ID! ){
-    sendQuestion(testId:$testId, questionId:$questionId){
-      question
-      id
-    }
-  }
-  `
 
 export default class ReviewQuestion extends React.Component {
 
   static navigationOptions = {
     title: 'Review Question',
-  };
-
-  state ={
-    isVisible: false,
-    errorMessage:''
   }
 
-  render() {
+  state ={
+    graphQLError: '',
+    isVisibleGraph:false,
+    networkError:'',
+    isVisibleNet:false,
+  }
 
-    const { navigation } = this.props;
-
-    const {isVisible, errorMessage} = this.state
+  componentDidMount = async () => {
 
     const newQuestionId = navigation.getParam('newQuestionId', 'NO-ID')
     const oldQuestionId = navigation.getParam('oldQuestionId', 'NO-ID')
     const testId = navigation.getParam('testId', 'NO-ID')
+    try {
+      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+      if (!token) {
+        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'CreateQuestion1',reDirectParams:{newQuestionId,oldQuestionId,testId}})
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  render() {
+
+    const { navigation } = this.props
+
+    const {graphQLError, networkError, isVisibleNet, isVisibleGraph} = this.state
 
     return (
 
@@ -78,7 +60,7 @@ export default class ReviewQuestion extends React.Component {
       <View style={styles.container}>
       <Query query={QUESTION_QUERY} variables={{ questionId: newQuestionId }}>
             {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
+              if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error} />
 
               const questionToRender = data.question
@@ -93,7 +75,7 @@ export default class ReviewQuestion extends React.Component {
             {questionToRender.test.subject} - {questionToRender.test.testNumber}
             </Text>
 
-            <Image key={questionToRender.panel.link} source={{uri: questionToRender.panel.link }} style={styles.logo} />
+            <Image key={questionToRender.panel.link} source={{uri: questionToRender.panel.link }} style={styles.panel} />
 
             <View key={questionToRender.test.testNumber} style={styles.question}>
               <Text key={questionToRender.question} >
@@ -111,15 +93,9 @@ export default class ReviewQuestion extends React.Component {
           }}
           </Query>
 
-          <View>
-          {isVisible &&
-            <>
-            <Text style={styles.messages}>Something is wrong!</Text>
-            <Text style={styles.messages}>{errorMessage}</Text>
-            </>
+          {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
 
-          }
-          </View>
+          {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
 
              <Mutation
                  mutation={SEND_QUESTION_MUTATION}
@@ -147,20 +123,22 @@ export default class ReviewQuestion extends React.Component {
 
           </View>
       </ScrollView>
-    );
+    )
   }
 
   _error = async error => {
-      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
-      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
-      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
 
-      this.setState({ isVisible: true, errorMessage})
+      const gerrorMessage = error.graphQLErrors.map((err,i) => err.message)
+      this.setState({ isVisibleGraph: true, graphQLError: gerrorMessage})
+
+      error.networkError &&
+        this.setState({ isVisibleNet: true, networkError: error.networkError.message})
+
   }
 
   _confirm = (data) => {
     const { id,question } = data.sendQuestion
-    const { navigation } = this.props;
+    const { navigation } = this.props
     const oldQuestionId = navigation.getParam('oldQuestionId', 'NO-ID')
 
     this.props.navigation.navigate('AnswerQuestion',{ questionId: oldQuestionId })
@@ -168,71 +146,7 @@ export default class ReviewQuestion extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-  },
-  choice:{
-    flexDirection:"row",
-    minHeight: 50,
-    alignItems: 'center',
-    backgroundColor:'white',
-    width: 300,
-    padding:10
-  },
-  question:{
-    minHeight: 50,
-    alignItems: 'center',
-    backgroundColor:'white',
-    width: 300,
-    padding:10
-  },
-  logo: {
-    height: 220,
-    marginBottom: 15,
-    marginTop: 15,
-    width: 350,
-  },
-  choices:{
-    flexDirection:"row",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  choicetext:{
-    fontWeight:'bold',
-    fontSize:18,
-    color:'#484848'
-  },
-  question:{
-    height: 80,
-    width: 350,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  },
-  messages: {
-    padding:30,
-    fontSize:18,
-    textAlign:'center',
-    color:'red'
-  },
-  input:{
-    height: 40,
-    width: 300,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  },
-  answer:{
-    height: 40,
-    width: 100,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  }
-});
+  container,
+  question,
+  panel
+})

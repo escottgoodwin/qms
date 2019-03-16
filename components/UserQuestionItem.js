@@ -42,12 +42,6 @@ const UserQuestionItem = (props) =>
   </View>
 
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#e4f1fe',
-    },
     choice:{
       backgroundColor:'white',
       padding:10,
@@ -62,24 +56,7 @@ const UserQuestionItem = (props) =>
     incorrect:{
       fontSize:14,
       margin:10,
-    },
-    logo: {
-      height: 120,
-      marginBottom: 16,
-      marginTop: 32,
-      width: 120,
-    },
-    welcome: {
-      fontSize: 20,
-      textAlign: 'center',
-      margin: 10,
-    },
-    instructions: {
-      textAlign: 'center',
-      color: '#333333',
-      marginBottom: 5,
-      fontSize:18
-    },
+    }
   });
 
 

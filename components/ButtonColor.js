@@ -1,6 +1,6 @@
-import React from 'react';
-import { Dimensions,View } from 'react-native';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { Dimensions,View } from 'react-native'
+import PropTypes from 'prop-types'
 import { Button } from 'react-native-elements'
 
 const ButtonColor = (props) =>
@@ -16,7 +16,7 @@ const ButtonColor = (props) =>
     }}
     onPress={props.onpress}
   />
-  
+
   </View>
   ButtonColor.propTypes = {
     title: PropTypes.string.isRequired,

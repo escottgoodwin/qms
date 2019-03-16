@@ -1,7 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Image, Text, View } from 'react-native';
-import { Button } from 'react-native-elements'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { StyleSheet, Image, Text, View } from 'react-native'
 
 const DashboardHeader = (props) =>
   <View style={styles.container}>
@@ -28,16 +27,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   }
-});
-
-DashboardHeader.propTypes = {
-  name: PropTypes.string.isRequired,
-};
+})
 
 export default DashboardHeader

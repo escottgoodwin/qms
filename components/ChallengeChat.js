@@ -1,93 +1,51 @@
-import React from 'react';
-import { StyleSheet, Platform, FlatList, Image, Text, View, ScrollView,TextInput,Alert} from 'react-native';
+import React from 'react'
+import { View, StyleSheet, Text, TextInput } from 'react-native'
 import { Button,Card } from 'react-native-elements'
 const moment = require('moment')
 
-import DisputeQuestion from '../components/DisputeQuestion'
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { Query, Mutation } from "react-apollo"
+import gql from "graphql-tag"
+
+import {
+        ADD_CHALLENGE_MESSAGE_MUTATION,
+        CHALLENGE_MESSAGE_QUERY,
+        CHALLENGE_MESSAGE_SUBSCRIPTION
+        } from '../ApolloQueries'
 
 import ButtonColor from '../components/ButtonColor'
-import SpinnerLoading from '../components/SpinnerLoading'
+import SpinnerLoading1 from '../components/SpinnerLoading1'
+import ErrorComponent from '../components/ErrorComponent'
 import QAList from '../components/QAList'
 import ChallengeMessageList from '../components/ChallengeMessageList'
 import ChallengeMessageRow from '../components/ChallengeMessageRow'
-
-
-  const ADD_CHALLENGE_MESSAGE_MUTATION = gql`
-  mutation AddChallengeMessage($challengeId: ID!,
-    $challengeMessage: String!){
-      addChallengeMessage(challengeMessage:$challengeMessage,
-      challengeId:$challengeId){
-        id
-        addedBy{
-          id
-          firstName
-          lastName
-        }
-      }
-    }
-  `
-
-  const CHALLENGE_MESSAGE_QUERY = gql`
-  query ChallengeMessages($challengeId:ID!){
-     challengeMessages(where:{challenge:{id:$challengeId}}){
-    	challengeMessages{
-        id
-        challengeMessage
-        addedDate
-        addedBy{
-          id
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-  `
-
-  const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
-    subscription ChallengeMsgSub($challengeId:ID!){
-      challengeMsg(challengeId:$challengeId){
-        node{
-          id
-          challengeMessage
-          addedDate
-          addedBy{
-            id
-            firstName
-            lastName
-          }
-        }
-      }
-    }
-    `
 
 export default class ChallengeChat extends React.Component {
 
   static navigationOptions = {
     title: 'Challenge Answer'
-  };
+  }
 
     state = {
       challengeMessage:'',
       count:'',
-      isVisible: false,
-      errorMessage:'',
+      graphQLError: '',
+      isVisibleGraph:false,
+      networkError:'',
+      isVisibleNet:false,
       challengeMessages:[],
     }
 
   render() {
     const { challengeId } = this.props
-    const { challengeMessage, isVisible, errorMessage } = this.state
+    const { challengeMessage, graphQLError, networkError, isVisibleNet, isVisibleGraph } = this.state
 
     return (
-      <View style={styles.container}>
+      <View >
 
             <Query query={CHALLENGE_MESSAGE_QUERY} variables={{ challengeId: challengeId }}>
                   {({ loading, error, data, subscribeToMore }) => {
-                    if (loading) return <SpinnerLoading />
-                    if (error) return <Text>{JSON.stringify(error)}</Text>
+                    if (loading) return <SpinnerLoading1 />
+                    if (error) return <ErrorComponent {...error}/>
 
                     const challengeMessages = data.challengeMessages
 
@@ -122,10 +80,16 @@ export default class ChallengeChat extends React.Component {
               value={this.state.challengeMessage}
              />
 
+             {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
+
+             {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
+
+            <View style={{padding:10,alignItems:'center'}} >
              <Mutation
                  mutation={ADD_CHALLENGE_MESSAGE_MUTATION}
                  variables={{ challengeId: challengeId, challengeMessage:challengeMessage }}
                  onCompleted={data => this._confirm(data)}
+                 onError={error => this._error (error)}
                  >
                  {mutation => (
                    <ButtonColor
@@ -135,6 +99,7 @@ export default class ChallengeChat extends React.Component {
                    />
                  )}
                </Mutation>
+              </View>
                </>
              )
              }}
@@ -143,6 +108,17 @@ export default class ChallengeChat extends React.Component {
       </View>
       )
     }
+
+  _error = async error => {
+
+      const gerrorMessage = error.graphQLErrors.map((err,i) => err.message)
+      this.setState({ isVisibleGraph: true, graphQLError: gerrorMessage})
+
+      error.networkError &&
+        this.setState({ isVisibleNet: true, networkError: error.networkError.message})
+
+  }
+
   _confirm = (data) => {
     const { id } = data
     this.setState({challengeMessage:''})
@@ -157,25 +133,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  logo: {
-    height: 200,
-    marginBottom: 16,
-    marginTop: 32,
-    width: 320,
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  input:{
-    height: 40,
-    width: 300,
-    backgroundColor:'white',
-    borderRadius: 5,
-    borderColor: 'darkgrey',
-    margin:5,
-    padding:10
   }
-});
+})

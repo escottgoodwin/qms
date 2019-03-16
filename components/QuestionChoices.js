@@ -1,7 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Platform, Image, Text, View, ScrollView,TextInput,Alert} from 'react-native';
-import { Button } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, Text, View, TextInput } from 'react-native'
 
 const QuestionChoices =(props) =>
 
@@ -84,15 +82,6 @@ const QuestionChoices =(props) =>
         margin:5,
         padding:10
       },
-      answer:{
-        height: 40,
-        width: 75,
-        backgroundColor:'white',
-        borderRadius: 5,
-        borderColor: 'darkgrey',
-        margin:5,
-        padding:10
-      },
       question:{height: 80,
         width: 350,
         backgroundColor:'white',
@@ -100,15 +89,6 @@ const QuestionChoices =(props) =>
         borderColor: 'darkgrey',
         margin:5,
         padding:10},
-    });
-
-QuestionChoices.propTypes = {
-  question: PropTypes.string.isRequired,
-  choice1: PropTypes.string.isRequired,
-  choice2: PropTypes.string.isRequired,
-  choice3: PropTypes.string.isRequired,
-  choice4: PropTypes.string.isRequired,
-  correct: PropTypes.string.isRequired
-};
+    })
 
 export default QuestionChoices

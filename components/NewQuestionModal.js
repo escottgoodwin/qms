@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Button, Text, View } from 'react-native';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { StyleSheet, Button, Text, View } from 'react-native'
 
 export default class NewQuestionModal extends React.Component {
 
   render() {
-    const { navigation } = this.props;
+    const { navigation } = this.props
 
     const questionId1 = navigation.getParam('questionId1', 'NO-ID')
     const course = navigation.getParam('course', 'NO-ID')
@@ -44,7 +44,7 @@ export default class NewQuestionModal extends React.Component {
   )
   }
 }
-flexDirection: 'row'
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -58,11 +58,6 @@ const styles = StyleSheet.create({
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.8,
 		shadowRadius: 2,
-  },
-  button: {
-    borderColor: 'lightblue',
-    borderWidth:1,
-    borderRadius:5,
   },
   message: {
     fontSize:16,

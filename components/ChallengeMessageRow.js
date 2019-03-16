@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, Platform, FlatList, Image, Text, View, ScrollView,TextInput,Alert} from 'react-native';
-import { Button,Card } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+
 const moment = require('moment')
 
 const ChallengeMessageRow = (props) =>
@@ -20,5 +20,5 @@ const styles = StyleSheet.create({
     width: 300,
     padding:10,
     margin:10
-  },
+  }
 })

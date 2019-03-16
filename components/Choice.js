@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text, View, TextInput, Dimensions,  } from 'react-native';
-import PropTypes from 'prop-types';
-import { Button, CheckBox } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, Text, View, TextInput } from 'react-native'
+import PropTypes from 'prop-types'
+import { CheckBox } from 'react-native-elements'
 
 const Choice = (props) =>
 
@@ -28,11 +28,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  choicetext:{
-    fontWeight:'bold',
-    fontSize:18,
-    color:'#484848'
-  },
   input:{
     height: 40,
     width: "80%",
@@ -41,11 +36,6 @@ const styles = StyleSheet.create({
     margin:5,
     padding:5
   },
-});
-
-Choice.propTypes = {
-  placeholder: PropTypes.string.isRequired,
-  changetext: PropTypes.func.isRequired
-};
+})
 
 export default Choice

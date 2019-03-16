@@ -1,73 +1,20 @@
-import React from 'react';
-import { StyleSheet, Platform, FlatList, TouchableOpacity, Image, Text, View, ScrollView,TextInput,Alert} from 'react-native';
-import { Button,Card } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, Image, Text, View, ScrollView, TextInput } from 'react-native'
 const moment = require('moment')
 
-import DisputeQuestion from '../components/DisputeQuestion'
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { Query, Mutation } from "react-apollo"
+
+import { container, welcome, choice, question, panel, input, button } from '../css'
+
+import {CHALLENGE_ANSWER_QUERY,
+        CREATE_CHALLENGE_MUTATION} from '../ApolloQueries'
 
 import ButtonColor from '../components/ButtonColor'
-import SpinnerLoading from '../components/SpinnerLoading'
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import QAList from '../components/QAList'
 import ChallengeList from '../components/ChallengeList'
 import Error from '../components/Error'
 import TestHeader from '../components/TestHeader'
-
-
-const CHALLENGE_ANSWER_QUERY = gql`
-query ChallengeAnswerQuery($questionId:ID!){
-  answers(where:{question:{id:$questionId}}){
-    answers{
-    id
-    answer{
-      id
-      choice
-      correct
-    }
-    question{
-      id
-      question
-      panel{
-        id
-        link
-      }
-      choices{
-        id
-        choice
-        correct
-      }
-      challenges{
-        id
-        challenge
-      }
-      test{
-        id
-        subject
-        testNumber
-        course
-        {
-          id
-          name
-          institution{
-            id
-            name
-          }
-        }
-      }
-    }
-  }
-}
-}
-`
-
-const CREATE_CHALLENGE_MUTATION = gql`
-  mutation CreateChallenge($answerId:ID!,$challenge:String!){
-    addChallenge(challenge:$challenge,answerId:$answerId){
-      id
-    }
-  }
-`
 
 export default class ChallengeDashboard extends React.Component {
 
@@ -77,14 +24,33 @@ export default class ChallengeDashboard extends React.Component {
 
     state = {
       challenge:'',
-      isVisible: false,
-      errorMessage:''
+      graphQLError: '',
+      isVisibleGraph:false,
+      networkError:'',
+      isVisibleNet:false,
     }
 
+    componentDidMount = async () => {
+
+      const answerId = this.props.navigation.getParam('answerId', 'NO-ID')
+      const questionId = this.props.navigation.getParam('questionId', 'NO-ID')
+
+      try {
+        const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+        if (!token) {
+          this.props.navigation.navigate('ReSignIn',{reDirectScreen:'ChallengeDashboard',reDirectParams:{answerId,questionId}})
+        }
+      }
+      catch (error) {
+        console.log(error)
+      }
+
+    }
 
   render() {
     const { navigation } = this.props
-    const { challenge, isVisible, errorMessage } = this.state
+    const { challenge, graphQLError, networkError, isVisibleNet, isVisibleGraph } = this.state
 
     const answerId = this.props.navigation.getParam('answerId', 'NO-ID')
     const questionId = this.props.navigation.getParam('questionId', 'NO-ID')
@@ -95,7 +61,7 @@ export default class ChallengeDashboard extends React.Component {
 
         <Query query={CHALLENGE_ANSWER_QUERY} variables={{ questionId: questionId }}>
               {({ loading, error, data }) => {
-                if (loading) return <SpinnerLoading />
+                if (loading) return <SpinnerLoading1 />
                 if (error) return <Error {...error}/>
 
                 const questionToRender = data.answers.answers[0]
@@ -127,13 +93,10 @@ export default class ChallengeDashboard extends React.Component {
           value={this.state.challenge}
          />
 
-         {isVisible &&
-           <>
-           <Text style={styles.messages}>Something is wrong!</Text>
-           <Text style={styles.messages}>{errorMessage}</Text>
-           </>
+         {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
 
-         }
+         {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
+
 
          <Mutation
              mutation={CREATE_CHALLENGE_MUTATION}
@@ -145,13 +108,20 @@ export default class ChallengeDashboard extends React.Component {
              onError={error => this._error (error)}
            >
              {mutation => (
+
+               <View style={button} >
+
                <ButtonColor
                title="Submit Challenge"
                backgroundcolor="#282828"
                onpress={mutation}
                />
+
+               </View>
+
              )}
            </Mutation>
+
 
          <Text style={styles.welcome}>
            Other Challenges of this Question
@@ -159,11 +129,13 @@ export default class ChallengeDashboard extends React.Component {
 
          <ChallengeList navigation={this.props.navigation} questionToRender={questionToRender} />
 
+         <View style={button} >
          <ButtonColor
          title="Cancel"
          backgroundcolor="#282828"
          onpress={() => this.props.navigation.navigate('TestDashboard',{ testId: questionToRender.question.test.id })}
          />
+         </View>
          </>
        )
      }}
@@ -176,11 +148,13 @@ export default class ChallengeDashboard extends React.Component {
   }
 
   _error = async error => {
-      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
-      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
-      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
 
-      this.setState({ isVisible: true, errorMessage})
+      const gerrorMessage = error.graphQLErrors.map((err,i) => err.message)
+      this.setState({ isVisibleGraph: true, graphQLError: gerrorMessage})
+
+      error.networkError &&
+        this.setState({ isVisibleNet: true, networkError: error.networkError.message})
+
   }
 
   _confirm = (data) => {
@@ -190,46 +164,10 @@ export default class ChallengeDashboard extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  choice:{
-    flexDirection:"row",
-    borderRadius: 5,
-    backgroundColor:'white',
-    minWidth: "85%",
-    padding:10,
-    margin:15,
-    fontSize:16
-  },
-  question:{
-    fontSize: 20,
-    minHeight: 50,
-    alignItems: 'center',
-    backgroundColor:'white',
-    width: 300,
-    padding:10,
-    margin:10
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  logo: {
-    margin:15,
-    height:210
-  },
-  input:{
-    height: 40,
-    backgroundColor:'white',
-    borderRadius: 5,
-    borderColor: 'darkgrey',
-    margin:15,
-    padding:10
-  }
-});
+  container,
+  choice,
+  question,
+  welcome,
+  panel,
+  input
+})

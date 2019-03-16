@@ -28,7 +28,10 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
     fontSize:18
-  }
+  },
+  card:{
+    width: Dimensions.get('window').width * .8
+  },
 });
 
 TestList.propTypes = {

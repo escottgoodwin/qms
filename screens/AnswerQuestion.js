@@ -1,85 +1,67 @@
-import React from 'react';
-import { StyleSheet, Platform,Image, Text, View, ScrollView,TextInput,Alert,FlatList,TouchableOpacity,Dimensions} from 'react-native';
+import React from 'react'
+import { StyleSheet, Platform,Image, Text, View, ScrollView,TextInput,Alert,FlatList,TouchableOpacity,Dimensions} from 'react-native'
 import { Button,Card } from 'react-native-elements'
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button'
 
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { Query, Mutation } from "react-apollo"
+
+import { container, welcome, radioForm, question1 } from '../css'
+
+import {ANSWER_QUESTION_QUERY,
+        ANSWER_QUESTION_MUTATION} from '../ApolloQueries'
 
 import ButtonColor from '../components/ButtonColor'
-import SpinnerLoading from '../components/SpinnerLoading'
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import Error from '../components/Error'
+import ErrorMutation from '../components/ErrorMutation'
 import TestHeader from '../components/TestHeader'
-
-
-const ANSWER_QUESTION_QUERY = gql`
-  query AnswerQuestionQuery($questionId:ID!){
-    question(id:$questionId){
-      id
-      question
-      choices {
-        id
-        choice
-        correct
-      }
-      test{
-        id
-        subject
-        testNumber
-        course{
-          id
-          name
-          institution{
-            id
-            name
-          }
-        }
-      }
-    }
-  }
-`
-
-const ANSWER_QUESTION_MUTATION = gql`
-  mutation AnswerQuestionMutation(
-    $questionId:ID!,
-  	$answerChoiceId:ID!){
-    addAnswer(
-      questionId:$questionId,
-      answerChoiceId:$answerChoiceId
-    ){
-      id
-    }
-  }
-`
 
 export default class AnswerQuestion extends React.Component {
 
   static navigationOptions = {
     title: 'Answer Question',
-  };
+  }
 
+  componentDidMount = async () => {
+
+    const questionId = navigation.getParam('questionId', 'NO-ID')
+
+    try {
+      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+      if (!token) {
+        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'AnswerQuestion',reDirectParams:{questionId}})
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+  }
 
   state = {
           answerChoiceId: '',
           chosenLabel:'',
-          isVisible: false,
-          errorMessage:''
-      };
+          graphQLError: '',
+          isVisibleGraph:false,
+          networkError:'',
+          isVisibleNet:false,
+      }
 
 _onSelect = ( item ) => {
   this.setState({
     answerChoiceId:item.value,
     chosenLabel:item.label,
   })
-};
+}
 
 
   render() {
-    const { navigation } = this.props;
+    const { navigation } = this.props
 
     const questionId = navigation.getParam('questionId', 'NO-ID')
 
-    const {isVisible, errorMessage} = this.state
+    const {graphQLError, networkError, isVisibleNet, isVisibleGraph} = this.state
 
     return (
       <View style={styles.container}>
@@ -87,7 +69,7 @@ _onSelect = ( item ) => {
 
       <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId }}>
             {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
+              if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error}/>
 
               const questionToRender = data.question
@@ -98,14 +80,14 @@ _onSelect = ( item ) => {
             <>
             <TestHeader testId={questionToRender.test.id}/>
 
-            <View style={styles.question}>
+            <View style={styles.question1}>
             <Text style={styles.welcome}>
               {questionToRender.question}
             </Text>
             </View>
 
 
-            <View style={styles.choice}>
+            <View style={styles.radioForm}>
             <RadioForm
               radio_props={checkboxes}
               initial={-1}
@@ -118,14 +100,10 @@ _onSelect = ( item ) => {
           }}
           </Query>
 
-          <View>
-          {isVisible &&
-            <>
-            <Text style={styles.messages}>Something is wrong!</Text>
-            <Text style={styles.messages}>{errorMessage}</Text>
-            </>
-          }
-          </View>
+          {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
+
+          {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
+
 
              <Mutation
                  mutation={ANSWER_QUESTION_MUTATION}
@@ -147,15 +125,18 @@ _onSelect = ( item ) => {
 
       </ScrollView>
       </View>
-    );
+    )
   }
 
   _error = async error => {
-      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
-      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
-      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
 
-      this.setState({ isVisible: true, errorMessage})
+
+      const gerrorMessage = error.graphQLErrors.map((err,i) => err.message)
+      this.setState({ isVisibleGraph: true, graphQLError: gerrorMessage})
+
+      error.networkError &&
+        this.setState({ isVisibleNet: true, networkError: error.networkError.message})
+
   }
 
   _confirm = (data) => {
@@ -166,59 +147,8 @@ _onSelect = ( item ) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-  },
-  choice:{
-    fontSize:18,
-    margin:15,
-    padding:10,
-    color:'#282828',
-    backgroundColor:'white',
-    borderRadius:5
-  },
-  question:{
-    borderRadius:5,
-    fontWeight:'bold',
-    fontSize:18,
-    padding:10,
-    margin:15,
-    color:'#282828',
-    backgroundColor:'white'
-  },
-  header:{
-    width: 300,
-    fontWeight:'bold',
-    fontSize:18,
-    padding:10,
-    margin:25,
-    color:'#282828'
-  },
-  messages: {
-    padding:5,
-    fontSize:16,
-    textAlign:'center',
-    color:'red'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  answer:{
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 300,
-    height:175,
-    },
-  header:{
-    width: 300,
-    fontSize:18,
-    textAlign:'center',
-    color:'#003366',
-    margin:5
-  }
-});
+  container,
+  radioForm,
+  question1,
+  welcome
+})

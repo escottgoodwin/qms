@@ -1,6 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native'
 import { Icon } from 'react-native-elements'
 
 const QAList = (props) =>
@@ -60,10 +59,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-});
-
-QAList.propTypes = {
-  qa_list: PropTypes.array.isRequired,
-};
+})
 
 export default QAList

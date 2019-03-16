@@ -5,7 +5,7 @@ import { Mutation } from "react-apollo"
 import firebase from 'react-native-firebase'
 import type { Notification, NotificationOpen } from 'react-native-firebase'
 
-import { container, input, button } from '../css'
+import { container, input } from '../css'
 
 import {LOGIN_MUTATION} from '../ApolloQueries'
 
@@ -14,7 +14,7 @@ import SignInHeader from '../components/SignInHeader'
 import NewQuestionModal from '../components/NewQuestionModal'
 import ErrorMutation from '../components/ErrorMutation'
 
-export default class SignIn extends React.Component {
+export default class ReSignIn extends React.Component {
 
   componentDidMount = async () => {
 
@@ -77,14 +77,7 @@ export default class SignIn extends React.Component {
       secureTextEntry={true}
       />
 
-      <View style={button}>
-      <ButtonColor
-      title="Create Question"
-      backgroundcolor="#282828"
-      onpress={() => this.props.navigation.navigate('CreateQuestion1',{ questionId1: 'cjrr2i2im00490859c72hsk2x' })}
-      />
-        </View>
-
+      <View style={{padding:15}}>
       <Mutation
           mutation={LOGIN_MUTATION}
           variables={{ email:email, password:password, pushToken: this.state.pushToken }}
@@ -92,16 +85,14 @@ export default class SignIn extends React.Component {
           onError={error => this._error (error)}
         >
           {mutation => (
-            <View style={button}>
             <ButtonColor
             title="Login with Email"
             backgroundcolor="#003366"
             onpress={mutation}
             />
-            </View>
           )}
         </Mutation>
-
+        </View>
 
       </KeyboardAvoidingView>
     )
@@ -121,11 +112,15 @@ export default class SignIn extends React.Component {
 
     const { token, user } = data.mobileLogin
     const userid = user.id
+
     const newToken = await AsyncStorage.setItem('AUTH_TOKEN', token)
     const user1 = await AsyncStorage.setItem('USERID', userid)
 
+    const reDirectScreen = this.props.navigation.getParam('reDirectScreen', 'NO-ID')
+    const reDirectParams = this.props.navigation.getParam('reDirectParams', 'NO-ID')
+
     if (user.role === 'STUDENT') {
-      this.props.navigation.navigate('StudentDashboard')
+      this.props.navigation.navigate(reDirectScreen,reDirectParams)
     } else {
       authMsg = 'If you are a teacher or adminstrator, please login with your teacher app.'
       this.setState({authMsg:authMsg, isVisibleAuth:true})

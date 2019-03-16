@@ -1,37 +1,17 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import { Button, Card } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native'
 
+import {TEST_QUESTIONS_QUERY} from '../ApolloQueries'
 import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
 import Error from '../components/Error'
 import TestHeader from '../components/TestHeader'
 
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { Query } from "react-apollo"
 
-import SpinnerLoading from '../components/SpinnerLoading'
+import { container, choice } from '../css'
 
-const TEST_QUESTIONS_QUERY = gql`
-query TestQuestionsQuery($testId:ID!){
-  test(id:$testId){
-    id
-    subject
-    testNumber
-    testDate
-    course{
-      id
-      name
-      courseNumber
-    }
-    questions{
-      id
-      question
-    }
-  }
-}
-`
-
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 
 export default class AllQuestions extends React.Component {
 
@@ -39,17 +19,28 @@ export default class AllQuestions extends React.Component {
     title: 'All Questions',
   }
 
-  state = {
-    challenge:'',
-    isVisible: false,
-    errorMessage:''
+  componentDidMount = async () => {
+
+    const testId = this.props.navigation.getParam('testId', 'NO-ID')
+
+    try {
+      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+      if (!token) {
+        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'AllQuestions',reDirectParams:{testId}})
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
   }
 
-answerRandom = (questions) =>  {
-  const randomInt = Math.floor(Math.random() * questions.length)
-  const randomId = questions[randomInt].id
-  this.props.navigation.navigate("AnswerQuestion",{questionId: randomId })
-  }
+  answerRandom = (questions) =>  {
+    const randomInt = Math.floor(Math.random() * questions.length)
+    const randomId = questions[randomInt].id
+    this.props.navigation.navigate("AnswerQuestion",{questionId: randomId })
+    }
 
   render() {
 
@@ -59,7 +50,7 @@ answerRandom = (questions) =>  {
 
       <Query query={TEST_QUESTIONS_QUERY} variables={{ testId: testId }}>
             {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
+              if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error}/>
 
               const testToRender = data.test
@@ -69,15 +60,13 @@ answerRandom = (questions) =>  {
         <ScrollView >
           <TestHeader testId={testId}/>
 
-          <View style={{padding:15}}>
+          <View style={{padding:15,alignItems:'center'}}>
           <ButtonColor
           title="Answer Random Question"
           backgroundcolor="#003366"
           onpress={() => this.answerRandom(testToRender.questions)}
           />
           </View>
-
-          <Text>{this.state.randomQ} </Text>
 
           <FlatList
           data={testToRender.questions}
@@ -107,38 +96,11 @@ answerRandom = (questions) =>  {
       )
     }}
     </Query>
-    );
+    )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-  },
-  choice:{
-    backgroundColor:'white',
-    padding:10,
-    margin:10,
-    borderRadius:5
-  },
-  logo: {
-    height: 120,
-    marginBottom: 16,
-    marginTop: 32,
-    width: 120,
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-    fontSize:18
-  },
-});
+  container,
+  choice
+})

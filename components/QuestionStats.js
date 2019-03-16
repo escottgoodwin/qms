@@ -1,20 +1,12 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import { Button, Card } from 'react-native-elements'
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
-import SpinnerLoading from '../components/SpinnerLoading'
+import React from 'react'
+import { StyleSheet, Platform, Text, View, TouchableOpacity} from 'react-native'
+import { Card } from 'react-native-elements'
+import { Query } from "react-apollo"
 
-const USER_QUESTION_QUERY = gql`
-query UserQuestionStats($testId:ID!){
-  userQuestionStats(testId:$testId){
-    totalQuestions
-    totalCorrect
-    percentCorrect
-    answers
-  }
-}
-`
+import { USER_QUESTION_QUERY } from '../ApolloQueries'
+
+import SpinnerLoading1 from '../components/SpinnerLoading1'
+import ErrorComponent from '../components/ErrorComponent'
 
 export default class QuestionStats extends React.Component {
 
@@ -24,8 +16,8 @@ export default class QuestionStats extends React.Component {
 
       <Query query={USER_QUESTION_QUERY} variables={{ testId: this.props.testId }}>
             {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (loading) return <SpinnerLoading1 />
+              if (error) return <ErrorComponent {...error}/>
 
               const userQuestionStats = data.userQuestionStats
 
@@ -51,16 +43,10 @@ export default class QuestionStats extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
   instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
     fontSize:18
   }
-
-});
+})

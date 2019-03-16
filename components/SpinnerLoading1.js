@@ -1,10 +1,10 @@
 import React from 'react'
-import { View, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 
-const SpinnerLoading = () => (
+const SpinnerLoading1 = () => (
 
       <View style={styles.container}>
-      <ActivityIndicator size="large" color="#0000ff" />
+
       </View>
 
     )
@@ -20,4 +20,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SpinnerLoading
+export default SpinnerLoading1

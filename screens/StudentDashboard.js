@@ -1,85 +1,24 @@
 import React from 'react'
 import { AsyncStorage, StyleSheet, Image, Text, View, ScrollView } from 'react-native'
-import { Button } from 'react-native-elements'
 import { Query, Mutation } from "react-apollo"
-import { execute, makePromise } from 'apollo-link'
-import { HttpLink } from 'apollo-boost'
-import gql from "graphql-tag";
-import fetch from 'node-fetch'
-import firebase from 'react-native-firebase';
-import type { Notification, NotificationOpen } from 'react-native-firebase';
+import { container, button } from '../css'
+
+import {
+        USER_COURSE_QUERY,
+        LOGOUT_MUTATION,
+        STORE_TOKEN
+        } from '../ApolloQueries'
 
 import ButtonColor from '../components/ButtonColor'
 import DashboardHeader from '../components/DashboardHeader'
 import Courses from '../components/Courses'
-import SpinnerLoading from '../components/SpinnerLoading'
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import Error from '../components/Error'
-
-const COURSE_QUERY = gql`
-query UserQuery($userid: ID!) {
-  user(id: $userid){
-    id
-    firstName
-    lastName
-    invitesSentTo{
-      id
-      course{
-        id
-        courseNumber
-        name
-        time
-        teachers{
-          firstName
-          lastName
-        }
-        institution{
-          name
-        }
-      }
-    }
-    studentCourses{
-      id
-      name
-      time
-      deleted
-      institution{
-        name
-      }
-      teachers{
-        firstName
-        lastName
-      }
-      tests{
-        id
-      }
-    }
-  }
-}
-`;
-
-var LOGOUT_MUTATION = gql`
-    mutation {
-      logout{
-        authMsg
-        user{
-          online
-          firstName
-          lastName
-        }
-      }
-    }
-  `
-  const STORE_TOKEN = gql`
-  mutation StoreToken($pushToken:String!){
-    updateUser(pushToken:$pushToken){
-      id
-      pushToken
-    }
-  }
-  `
 
   const removeToken = async () => {
     await AsyncStorage.removeItem('USERID')
+    await AsyncStorage.removeItem('AUTH_TOKEN')
+
     return
   }
 
@@ -88,8 +27,11 @@ class StudentDashboard extends React.Component {
 
     state = {
       userid: '',
-      nofitication:{}
-    };
+      graphQLError: '',
+      isVisibleGraph:false,
+      networkError:'',
+      isVisibleNet:false,
+    }
 
   static navigationOptions = {
     title: 'Student Dashboard',
@@ -97,20 +39,30 @@ class StudentDashboard extends React.Component {
   }
 
   componentDidMount = async () => {
+    try {
     const userid = await AsyncStorage.getItem('USERID')
-    this.setState({userid})
+    if (!token) {
+      this.props.navigation.navigate('ReSignIn',{reDirectScreen:'StudentDashboard',reDirectParams:{userId:''}})
+    }
+  }
+  catch (error) {
+    console.log(error)
+  }
+  this.setState({userid})
   }
 
 
  render() {
-   const userid = this.state.userid
+
+   const { userid, challenge, graphQLError, networkError, isVisibleNet, isVisibleGraph } = this.state
+
     return (
       <View style={styles.container}>
       <ScrollView>
 
-          <Query query={COURSE_QUERY} variables={{ userid: userid }}>
+          <Query query={USER_COURSE_QUERY} variables={{ userid: userid }}>
                 {({ loading, error, data }) => {
-                  if (loading) return <SpinnerLoading />
+                  if (loading) return <SpinnerLoading1 />
                   if (error) return <Error {...error}/>
 
                   const userToRender = data.user
@@ -130,11 +82,24 @@ class StudentDashboard extends React.Component {
                     navigation={this.props.navigation}
                         />
 
+                    {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
+
+                    {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
+
+                    <View style={button}>
+                    <ButtonColor
+                    title="Create Question"
+                    backgroundcolor="#282828"
+                    onpress={() => this.props.navigation.navigate('CreateQuestion1',{ questionId1: 'cjrr2i2im00490859c72hsk2x' })}
+                    />
+                      </View>
+
                     <View style={{padding:15}}>
                     <Mutation
                         mutation={LOGOUT_MUTATION}
                         variables={{ userId:userid }}
                         onCompleted={data => this._confirm(data)}
+                        onError={error => this._error (error)}
                       >
                         {mutation => (
 
@@ -155,9 +120,20 @@ class StudentDashboard extends React.Component {
 
       </ScrollView>
       </View>
-    );
+    )
 
   }
+
+  _error = async error => {
+
+      const gerrorMessage = error.graphQLErrors.map((err,i) => err.message)
+      this.setState({ isVisibleGraph: true, graphQLError: gerrorMessage})
+
+      error.networkError &&
+        this.setState({ isVisibleNet: true, networkError: error.networkError.message})
+
+  }
+
  _confirm = (data) => {
     const { user, authMsg } = data.logout
     removeToken()
@@ -166,12 +142,7 @@ class StudentDashboard extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-  }
-});
+  container
+})
 
 export default StudentDashboard

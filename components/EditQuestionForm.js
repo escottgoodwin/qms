@@ -1,12 +1,13 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView,TextInput, Alert} from 'react-native';
+import React from 'react'
+import { StyleSheet, Image, Text, View } from 'react-native'
 import { Button } from 'react-native-elements'
 
 import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
+import ErrorMutation from '../components/ErrorMutation'
 
 import { Query, Mutation } from "react-apollo"
-import gql from "graphql-tag";
+import gql from "graphql-tag"
 
 const EDIT_QUESTION_MUTATION = gql`
   mutation EditQuestion(
@@ -58,9 +59,11 @@ export default class EditQuestionForm extends React.Component {
     choiceCorrect1:false,
     choice4:'',
     choiceCorrect1:false,
-    isVisible:false,
-    errorMessage:''
-  };
+    graphQLError: '',
+    isVisibleGraph:false,
+    networkError:'',
+    isVisibleNet:false,
+  }
 
   componentDidMount(){
 
@@ -101,8 +104,10 @@ export default class EditQuestionForm extends React.Component {
     choiceCorrect3,
     choice4,
     choiceCorrect4,
-    isVisible,
-    errorMessage
+    graphQLError,
+    networkError,
+    isVisibleNet,
+    isVisibleGraph
     } = this.state
 
     const updateQuestionContent = {
@@ -176,15 +181,10 @@ export default class EditQuestionForm extends React.Component {
        placeholder='Choice 4'
        />
 
-       <View>
-       {isVisible &&
-         <>
-         <Text style={styles.messages}>Something is wrong!</Text>
-         <Text style={styles.messages}>{errorMessage}</Text>
-         </>
+       {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
 
-       }
-       </View>
+       {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
+
 
        <Mutation
            mutation={EDIT_QUESTION_MUTATION}
@@ -207,7 +207,7 @@ export default class EditQuestionForm extends React.Component {
                  }
                  `,
                  variables: { questionId: id }
-             }];
+             }]
          }}
          >
            {mutation => (
@@ -224,27 +224,23 @@ export default class EditQuestionForm extends React.Component {
   }
 
   _error = async error => {
-      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
-      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
-      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
 
-      this.setState({ isVisible: true, errorMessage})
+      const gerrorMessage = error.graphQLErrors.map((err,i) => err.message)
+      this.setState({ isVisibleGraph: true, graphQLError: gerrorMessage})
+
+      error.networkError &&
+        this.setState({ isVisibleNet: true, networkError: error.networkError.message})
+
   }
+
   _confirm = (data) => {
     const { id } = data.updateQuestion
-    const { navigation } = this.props;
+    const { navigation } = this.props
     navigation.navigate('ReviewQuestion',{ questionId: id })
     }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-    minHeight:800
-  },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
@@ -256,16 +252,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     width: 350,
   },
-  choices:{
-    flexDirection:"row",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  choicetext:{
-    fontWeight:'bold',
-    fontSize:18,
-    color:'#484848'
-  },
   question:{
     height: 80,
     width: 350,
@@ -273,21 +259,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin:5,
     padding:10
-  },
-  input:{
-    height: 40,
-    width: 250,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
-  },
-  answer:{
-    height: 40,
-    width: 100,
-    backgroundColor:'white',
-    borderRadius: 10,
-    margin:5,
-    padding:10
   }
-});
+})

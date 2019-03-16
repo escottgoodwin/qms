@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native'
 
 const Courses = (props) =>
   <View style={{height: 250}}>
@@ -29,21 +29,12 @@ const styles = StyleSheet.create({
     color:'#282828'
   },
   touch: {
-
     margin:10,
     backgroundColor:"white",
     borderColor:"#e4fef1",
     borderRadius:5,
     padding:3
-  },
-  header:{
-    textAlign:"center",
-    fontSize: 20,
-    margin: 10}
-});
-
-Courses.propTypes = {
-  classes: PropTypes.array.isRequired,
-};
+  }
+})
 
 export default Courses

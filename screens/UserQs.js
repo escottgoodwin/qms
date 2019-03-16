@@ -1,50 +1,18 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import { Button, Divider } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native'
+import { Query } from "react-apollo"
+
+import { container, welcome, instructions, button } from '../css'
+
+import {USER_QUESTIONS_QUERY,
+        USER_QUESTION_STATS_QUERY} from '../ApolloQueries'
 
 import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
 import TestHeader from '../components/TestHeader'
 import UserQuestionItem from '../components/UserQuestionItem'
-import SpinnerLoading from '../components/SpinnerLoading'
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import Error from '../components/Error'
-
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
-
-const TEST_QUESTIONS_QUERY = gql`
-query UserQuestions($testId:ID!){
-  userQuestions(testId:$testId){
-    id
-    question
-    choices{
-      id
-      choice
-      correct
-    }
-    questionAnswers{
-      id
-      answerCorrect
-      answer{
-        id
-        choice
-        correct
-      }
-    }
-  }
-}
-`
-
-const USER_QUESTION_QUERY = gql`
-query UserQuestionStats($testId:ID!){
-  userQuestionStats(testId:$testId){
-    totalQuestions
-    totalCorrect
-    percentCorrect
-    answers
-  }
-}
-`
 
 export default class UserQs extends React.Component {
 
@@ -52,14 +20,20 @@ export default class UserQs extends React.Component {
     title: 'Your Questions',
   }
 
-  state = {
-    challenge:'',
-    isVisible: false,
-    errorMessage:''
-  }
+  componentDidMount = async () => {
 
-answerRandom = (questions) =>  {
-    this.props.navigation.navigate("AnswerQuestion")
+    const testId = navigation.getParam('testId', 'NO-ID')
+    try {
+      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+      if (!token) {
+        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'UserQs',reDirectParams:{testId}})
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
   }
 
   render() {
@@ -68,14 +42,6 @@ answerRandom = (questions) =>  {
 
     return (
 
-      <Query query={TEST_QUESTIONS_QUERY} variables={{ testId: testId }}>
-            {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
-              if (error) return <Error {...error}/>
-
-              const userQuestions = data.userQuestions
-
-          return (
         <View style={styles.container}>
         <ScrollView >
 
@@ -83,10 +49,10 @@ answerRandom = (questions) =>  {
 
           <Text style={styles.welcome}>Your Questions</Text>
 
-          <Query query={USER_QUESTION_QUERY} variables={{ testId: testId }}>
+          <Query query={USER_QUESTION_STATS_QUERY} variables={{ testId: testId }}>
                 {({ loading, error, data }) => {
                   if (loading) return <Loading1 />
-                  if (error) return <Text>{JSON.stringify(error)}</Text>
+                  if (error) return <Error {...error}/>
 
                   const userQuestionStats = data.userQuestionStats
 
@@ -108,6 +74,14 @@ answerRandom = (questions) =>  {
         }}
         </Query>
 
+        <Query query={USER_QUESTIONS_QUERY} variables={{ testId: testId }}>
+              {({ loading, error, data }) => {
+                if (loading) return <SpinnerLoading1 />
+                if (error) return <Error {...error}/>
+
+                const userQuestions = data.userQuestions
+
+            return (
 
           <FlatList
           data={userQuestions}
@@ -119,51 +93,29 @@ answerRandom = (questions) =>  {
           keyExtractor={item => item.id}
         />
 
+        )
+      }}
+      </Query>
+
+          <View style={button} >
+
           <ButtonColor
           title="Test Dashboard"
           backgroundcolor="#282828"
           onpress={() => this.props.navigation.navigate('TestDashboard',{ testId:testId })}
           />
+
+          </View>
+
           </ScrollView >
         </View>
-      )
-    }}
-    </Query>
-    );
+
+    )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-  },
-  choice:{
-    minHeight: 50,
-    backgroundColor:'white',
-    width: 300,
-    padding:10,
-    margin:10,
-    borderRadius:5
-  },
-  logo: {
-    height: 120,
-    marginBottom: 16,
-    marginTop: 32,
-    width: 120,
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-    fontSize:18,
-    borderRadius:5
-  },
-});
+  container,
+  welcome,
+  instructions
+})

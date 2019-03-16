@@ -1,7 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, TouchableOpacity,Dimensions} from 'react-native';
-import { Button, Card } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { Card } from 'react-native-elements'
 
 const TestCard = (props) =>
 
@@ -9,19 +8,12 @@ const TestCard = (props) =>
 <Card title={props.title} containerStyle={styles.card}>
 <Text style={styles.instructions}>Questions Total: {props.question_total} </Text>
 <Text style={styles.instructions}>Correct: {props.correct} </Text>
-</Card >
+</Card>
 </TouchableOpacity>
 
 const styles = StyleSheet.create({
   card:{
-    width: Dimensions.get('window').width * .8
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-    height:600
+    width: '80%'
   },
   instructions: {
     textAlign: 'center',
@@ -29,12 +21,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize:18
   }
-});
-
-TestCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  question_total:PropTypes.number.isRequired,
-  correct:PropTypes.number.isRequired
-};
+})
 
 export default TestCard

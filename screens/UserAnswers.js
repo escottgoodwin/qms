@@ -1,48 +1,22 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import { Button, Divider } from 'react-native-elements'
+import React from 'react'
+import { StyleSheet, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native'
+import { Divider } from 'react-native-elements'
 
 import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
 import TestHeader from '../components/TestHeader'
 
-import { Query, Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { Query } from "react-apollo"
 
-import SpinnerLoading from '../components/SpinnerLoading'
+import { container, welcome, choice, correct, incorrect, instructions, button } from '../css'
+
+import {
+        USER_ANSWERS_QUERY,
+        USER_ANSWERED_QUERY
+       } from '../ApolloQueries'
+
+import SpinnerLoading1 from '../components/SpinnerLoading1'
 import Error from '../components/Error'
-
-const TEST_QUESTIONS_QUERY = gql`
-query UserAnswers($testId:ID!){
-  userAnswers(testId:$testId){
-    id
-    answerCorrect
-    answer{
-      id
-      choice
-    }
-    question{
-      id
-      question
-      choices{
-        id
-        choice
-        correct
-      }
-    }
-  }
-}
-`
-
-const USER_ANSWERED_QUERY = gql`
-query UserAnsweredStats($testId:ID!){
-  userAnsweredStats(testId:$testId){
-    total
-    totalCorrect
-    percentCorrect
-  }
-}
-`
 
 export default class UserAnswer extends React.Component {
 
@@ -56,8 +30,20 @@ export default class UserAnswer extends React.Component {
     errorMessage:''
   }
 
-answerRandom = (questions) =>  {
-    this.props.navigation.navigate("AnswerQuestion")
+  componentDidMount = async () => {
+
+    const testId = navigation.getParam('testId', 'NO-ID')
+    try {
+      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
+      if (!token) {
+        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'UserAnswers',reDirectParams:{testId}})
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
+
   }
 
   render() {
@@ -66,14 +52,7 @@ answerRandom = (questions) =>  {
 
     return (
 
-      <Query query={TEST_QUESTIONS_QUERY} variables={{ testId: testId }}>
-            {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
-              if (error) return <Error {...error}/>
 
-              const answersToRender = data.userAnswers
-
-          return (
         <View style={styles.container}>
         <ScrollView >
 
@@ -84,7 +63,7 @@ answerRandom = (questions) =>  {
           <Query query={USER_ANSWERED_QUERY} variables={{ testId: testId }}>
                 {({ loading, error, data }) => {
                   if (loading) return <Loading1 />
-                  if (error) return <Text>{JSON.stringify(error)}</Text>
+                  if (error) return <Error {...error}/>
 
                   const userAnsweredStats = data.userAnsweredStats
 
@@ -100,12 +79,23 @@ answerRandom = (questions) =>  {
         }}
         </Query>
 
+        <Query query={USER_ANSWERS_QUERY} variables={{ testId: testId }}>
+              {({ loading, error, data }) => {
+                if (loading) return <SpinnerLoading1 />
+                if (error) return <Error {...error}/>
+
+                const answersToRender = data.userAnswers
+
+            return (
+
           <FlatList
           data={answersToRender}
           renderItem={
             ({ item, index }) => (
               <View style={styles.choice} >
-               <Text style={{fontSize:16,margin:10}}>{item.question.question} </Text>
+               <Text style={{fontSize:16,margin:10}}>
+                {item.question.question}
+               </Text>
 
                <Divider style={{ backgroundColor: '#D3D3D3' }} />
 
@@ -118,60 +108,29 @@ answerRandom = (questions) =>  {
           }
           keyExtractor={item => item.id}
         />
+          )
+        }}
+        </Query>
 
+          <View style={button} >
           <ButtonColor
           title="Test Dashboard"
-          backgroundcolor="#282828"
+          backgroundcolor="lightgreen"
           onpress={() => this.props.navigation.navigate('TestDashboard',{ testId:testId })}
           />
+          </View>
+
           </ScrollView >
         </View>
-      )
-    }}
-    </Query>
-    );
+    )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-  },
-  choice:{
-    backgroundColor:'white',
-    padding:10,
-    margin:10,
-    borderRadius:5
-  },
-  correct:{
-    fontSize:16,
-    color:'green',
-    margin:10
-  },
-  incorrect:{
-    fontSize:16,
-    color:'red',
-    margin:10
-  },
-  logo: {
-    height: 120,
-    marginBottom: 16,
-    marginTop: 32,
-    width: 120,
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-    fontSize:18,
-    borderRadius:5
-  },
-});
+  container,
+  choice,
+  correct,
+  incorrect,
+  welcome,
+  instructions
+})

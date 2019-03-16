@@ -1,29 +1,13 @@
-import React from 'react';
-import { StyleSheet, Platform, FlatList, Image, TouchableOpacity, Text, View, ScrollView,TextInput,Alert} from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
+import { Query } from "react-apollo"
 const moment = require('moment')
 
-import SpinnerLoading from '../components/SpinnerLoading'
-import Error from '../components/Error'
+import { TEST_HEADER_QUERY } from '../ApolloQueries'
 
-
-const TEST_HEADER_QUERY = gql`
-query TestHeaderQuery($testId:ID!){
-  test(id:$testId){
-    id
-    subject
-    testNumber
-    testDate
-    course{
-      id
-      name
-      courseNumber
-    }
-}
-}
-`
+import SpinnerLoading1 from '../components/SpinnerLoading1'
+import ErrorComponent from '../components/ErrorComponent'
 
 export default class TestHeader extends React.Component {
 
@@ -34,8 +18,8 @@ export default class TestHeader extends React.Component {
     return(
       <Query query={TEST_HEADER_QUERY} variables={{ testId: this.props.testId }}>
             {({ loading, error, data }) => {
-              if (loading) return <SpinnerLoading />
-              if (error) return <Error {...error}/>
+              if (loading) return <SpinnerLoading1 />
+              if (error) return <ErrorComponent {...error}/>
 
               const testToRender = data.test
 
@@ -64,4 +48,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 7,
   },
-});
+})
