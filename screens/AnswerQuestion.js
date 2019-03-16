@@ -24,7 +24,7 @@ export default class AnswerQuestion extends React.Component {
 
   componentDidMount = async () => {
 
-    const questionId = navigation.getParam('questionId', 'NO-ID')
+    const questionId = this.props.navigation.getParam('questionId', 'NO-ID')
 
     try {
       const token = await AsyncStorage.getItem('AUTH_TOKEN')

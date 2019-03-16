@@ -32,6 +32,8 @@ export default class ReviewQuestion extends React.Component {
 
   componentDidMount = async () => {
 
+    const { navigation } = this.props
+
     const newQuestionId = navigation.getParam('newQuestionId', 'NO-ID')
     const oldQuestionId = navigation.getParam('oldQuestionId', 'NO-ID')
     const testId = navigation.getParam('testId', 'NO-ID')

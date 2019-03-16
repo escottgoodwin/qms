@@ -23,7 +23,7 @@ export default class QuestionAnswered extends React.Component {
 
   componentDidMount = async () => {
 
-    const answerId = navigation.getParam('answerId', 'NO-ID')
+    const answerId = this.props.navigation.getParam('answerId', 'NO-ID')
 
     try {
       const token = await AsyncStorage.getItem('AUTH_TOKEN')

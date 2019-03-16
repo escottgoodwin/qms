@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { AsyncStorage, StyleSheet, Text, View, ScrollView } from 'react-native'
 import { Query } from "react-apollo"
 
 import { container, welcome } from '../css'
@@ -19,18 +19,18 @@ export default class CourseDashboard extends React.Component {
 
   componentDidMount = async () => {
 
-    const courseId = navigation.getParam('courseId', 'NO-ID')
+    const courseId = this.props.navigation.getParam('courseId', 'NO-ID')
 
     try {
-      const token = await AsyncStorage.getItem('AUTH_TOKEN')
+    const token = await AsyncStorage.getItem('AUTH_TOKEN')
 
-      if (!token) {
-        this.props.navigation.navigate('ReSignIn',{reDirectScreen:'ChallengeDashboard',reDirectParams:{courseId}})
-      }
+    if (!token) {
+      this.props.navigation.navigate('ReSignIn',{reDirectScreen:'CourseDashboard',reDirectParams:{courseId}})
     }
-    catch (error) {
-      console.log(error)
-    }
+  }
+  catch (error) {
+    console.log(error)
+  }
 
   }
 

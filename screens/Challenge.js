@@ -28,7 +28,7 @@ export default class Challenge extends React.Component {
 
   componentDidMount = async () => {
 
-    const challengeId = navigation.getParam('challengeId', 'NO-ID')
+    const challengeId = this.props.navigation.getParam('challengeId', 'NO-ID')
 
     try {
       const token = await AsyncStorage.getItem('AUTH_TOKEN')

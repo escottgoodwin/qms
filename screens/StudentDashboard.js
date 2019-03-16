@@ -39,16 +39,15 @@ class StudentDashboard extends React.Component {
   }
 
   componentDidMount = async () => {
-    try {
-    const userid = await AsyncStorage.getItem('USERID')
+
+    const token = await AsyncStorage.getItem('AUTH_TOKEN')
+
     if (!token) {
-      this.props.navigation.navigate('ReSignIn',{reDirectScreen:'StudentDashboard',reDirectParams:{userId:''}})
+      this.props.navigation.navigate('ReSignIn',{reDirectScreen:'StudentDashboard',reDirectParams:null})
     }
-  }
-  catch (error) {
-    console.log(error)
-  }
-  this.setState({userid})
+
+    const userid = await AsyncStorage.getItem('USERID')
+    this.setState({userid})
   }
 
 

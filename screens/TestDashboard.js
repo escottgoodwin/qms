@@ -24,7 +24,7 @@ export default class TestDashboard extends React.Component {
 
   componentDidMount = async () => {
 
-    const testId = navigation.getParam('testId', 'NO-ID')
+    const testId = this.props.navigation.getParam('testId', 'NO-ID')
     try {
       const token = await AsyncStorage.getItem('AUTH_TOKEN')
 
