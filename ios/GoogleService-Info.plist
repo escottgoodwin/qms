@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>185582499906-om12rvjua163pavk4tqulqku3333cb8e.apps.googleusercontent.com</string>
+	<string>631842494969-i8157n1lv5kstsko901gk9rhik3frd4f.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.185582499906-om12rvjua163pavk4tqulqku3333cb8e</string>
+	<string>com.googleusercontent.apps.631842494969-i8157n1lv5kstsko901gk9rhik3frd4f</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAFu-UiJGM_ZQDDAgtDSFckfHg3iAoM2bM</string>
+	<string>AIzaSyBpNabl7QMp3DbCSEDZSTjsqrxE22Clu-s</string>
 	<key>GCM_SENDER_ID</key>
-	<string>185582499906</string>
+	<string>631842494969</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.quandrio.mobile</string>
+	<string>com.quandrio.quandrio</string>
 	<key>PROJECT_ID</key>
-	<string>quandria-7bfca</string>
+	<string>quandrio-3c837</string>
 	<key>STORAGE_BUCKET</key>
-	<string>quandria-7bfca.appspot.com</string>
+	<string>quandrio-3c837.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:185582499906:ios:1d31adeac09b8ef0</string>
+	<string>1:631842494969:ios:a60444d8cbaae670</string>
 	<key>DATABASE_URL</key>
-	<string>https://quandria-7bfca.firebaseio.com</string>
+	<string>https://quandrio-3c837.firebaseio.com</string>
 </dict>
 </plist>

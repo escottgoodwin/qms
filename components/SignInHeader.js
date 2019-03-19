@@ -4,12 +4,9 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 const SignInHeader = (props) =>
 
 <View style={styles.container}>
-  <Image source={require('../assets/quandria_welcome.png')} style={[styles.logo]}/>
 
-  <Text style={styles.welcome}>
-    {props.title}
-  </Text>
-  </View>
+
+</View>
 
   const styles = StyleSheet.create({
     container: {
@@ -27,6 +24,7 @@ const SignInHeader = (props) =>
       height: 120,
       marginBottom: 16,
       marginTop: 32,
+      borderRadius:5
     },
   })
 

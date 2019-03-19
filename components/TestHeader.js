@@ -13,8 +13,6 @@ export default class TestHeader extends React.Component {
 
   render() {
 
-    const { navigation } = this.props
-
     return(
       <Query query={TEST_HEADER_QUERY} variables={{ testId: this.props.testId }}>
             {({ loading, error, data }) => {

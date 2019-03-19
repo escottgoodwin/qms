@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Button } from 'react-native-elements'
 
 const ButtonColor = (props) =>
-<View style={{width: Dimensions.get('window').width * .8}}>
+<View style={{width: Dimensions.get('window').width * .8,margin:10}}>
   <Button
     raised
     title={props.title}

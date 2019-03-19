@@ -1519,7 +1519,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.quandrio.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quandrio.quandrio;
 				PRODUCT_NAME = mobile;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1547,7 +1547,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.quandrio.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quandrio.quandrio;
 				PRODUCT_NAME = mobile;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";

@@ -105,20 +105,18 @@ export default class QuestionAnswered extends React.Component {
             keyExtractor={item => item.id}
           />
 
-          <View style={styles.button} >
            <ButtonColor
            title="Challenge Answer"
            backgroundcolor="#282828"
            onpress={() => this.props.navigation.navigate('ChallengeDashboard',{ answerId: answerToRender.id,questionId:answerToRender.question.id })}
            />
-           </View>
-          <View style={styles.button}>
+
           <ButtonColor
           title="Test Dashboard"
           backgroundcolor="#282828"
           onpress={() => this.props.navigation.navigate('TestDashboard',{ testId:answerToRender.question.test.id })}
           />
-          </View>
+
           </>
         )
         }}

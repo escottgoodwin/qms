@@ -85,15 +85,12 @@ class StudentDashboard extends React.Component {
 
                     {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
 
-                    <View style={button}>
                     <ButtonColor
                     title="Create Question"
                     backgroundcolor="#282828"
                     onpress={() => this.props.navigation.navigate('CreateQuestion1',{ questionId1: 'cjrr2i2im00490859c72hsk2x' })}
                     />
-                      </View>
 
-                    <View style={{padding:15}}>
                     <Mutation
                         mutation={LOGOUT_MUTATION}
                         variables={{ userId:userid }}
@@ -110,7 +107,6 @@ class StudentDashboard extends React.Component {
 
                         )}
                       </Mutation>
-                      </View>
 
                     </>
                       )

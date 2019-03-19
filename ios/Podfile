@@ -46,6 +46,10 @@ target 'mobile' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'TouchID', :path => '../node_modules/react-native-touch-id'
+
+  pod 'RNKeychain', :path => '../node_modules/react-native-keychain'
+
 end
 
 post_install do |installer|

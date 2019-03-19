@@ -97,6 +97,7 @@ export const logo = {
   height: 120,
   marginBottom: 16,
   marginTop: 32,
+  borderRadius:10
 }
 
 export const  correct = {
