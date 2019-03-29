@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, Platform,Image, Text, View, ScrollView,TextInput,Alert,FlatList,TouchableOpacity,Dimensions} from 'react-native'
-import { Button,Card } from 'react-native-elements'
+import { StyleSheet, Image, Text, View, ScrollView, TextInput, FlatList, TouchableOpacity, Dimensions} from 'react-native'
+import { Button, Card } from 'react-native-elements'
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button'
 
 import { Query, Mutation } from "react-apollo"

@@ -65,6 +65,12 @@ export default class TestDashboard extends React.Component {
           <QuestionStats navigation={this.props.navigation} testId={testId} />
 
           <ButtonColor
+          title="Add Labeled Photos"
+          backgroundcolor="#003366"
+          onpress={() => this.props.navigation.navigate("CameraLabels",{testId:testToRender.id})}
+          />
+
+          <ButtonColor
           title="All Questions"
           backgroundcolor="#1abc9c"
           onpress={() => this.props.navigation.navigate('AllQuestions',{testId:testToRender.id})}

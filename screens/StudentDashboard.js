@@ -47,7 +47,9 @@ class StudentDashboard extends React.Component {
     }
 
     const userid = await AsyncStorage.getItem('USERID')
+
     this.setState({userid})
+
   }
 
 

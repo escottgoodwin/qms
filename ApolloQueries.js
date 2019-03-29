@@ -163,8 +163,8 @@ var LOGOUT_MUTATION = gql`
     `
 
   const LOGIN_MUTATION = gql`
-    mutation LoginMutation($email: String!, $password: String!) {
-      mobileLogin(email: $email, password: $password) {
+    mutation LoginMutation($email: String!, $password: String!, $pushToken: String) {
+      mobileLogin(email: $email, password: $password, pushToken: $pushToken) {
         token
         user{
           id

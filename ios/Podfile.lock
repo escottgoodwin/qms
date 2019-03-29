@@ -181,6 +181,14 @@ PODS:
   - Protobuf (3.6.1)
   - React (0.58.0-rc.2):
     - React/Core (= 0.58.0-rc.2)
+  - react-native-camera (2.0.1):
+    - React
+    - react-native-camera/RCT (= 2.0.1)
+    - react-native-camera/RN (= 2.0.1)
+  - react-native-camera/RCT (2.0.1):
+    - React
+  - react-native-camera/RN (2.0.1):
+    - React
   - React/Core (0.58.0-rc.2):
     - yoga (= 0.58.0-rc.2.React)
   - React/fishhook (0.58.0-rc.2)
@@ -209,9 +217,15 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - rn-fetch-blob (0.10.6):
+    - React/Core
   - RNGestureHandler (1.0.16):
     - React
+  - RNKeychain (3.1.1):
+    - React
   - RNVectorIcons (6.3.0):
+    - React
+  - TouchID (4.4.1):
     - React
   - yoga (0.58.0-rc.2.React)
 
@@ -229,6 +243,7 @@ DEPENDENCIES:
   - Firebase/Performance (~> 5.15.0)
   - Firebase/RemoteConfig (~> 5.15.0)
   - Firebase/Storage (~> 5.15.0)
+  - react-native-camera (from `../node_modules/react-native-camera`)
   - React/Core (from `../node_modules/react-native`)
   - React/RCTActionSheet (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
@@ -240,8 +255,11 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - TouchID (from `../node_modules/react-native-touch-id`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
 SPEC REPOS:
@@ -279,10 +297,18 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   React:
     :path: "../node_modules/react-native"
+  react-native-camera:
+    :path: "../node_modules/react-native-camera"
+  rn-fetch-blob:
+    :path: "../node_modules/rn-fetch-blob"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNKeychain:
+    :path: "../node_modules/react-native-keychain"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  TouchID:
+    :path: "../node_modules/react-native-touch-id"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
@@ -317,10 +343,14 @@ SPEC CHECKSUMS:
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   React: e4fc8313fddcafa6457842be3a670c463c01e967
+  react-native-camera: 8a7658ffe5ae3bbdc9718b650970eba2628ee13c
+  rn-fetch-blob: 766f85cabd2992300dfa1be2bc9e4e258abc6f04
   RNGestureHandler: 0438a761e8f29be3b809f9e7e43014f3aba4d7a6
+  RNKeychain: 1a121521011702409f5a1009eb8a1effa81000f3
   RNVectorIcons: cb42a5653c046f12ca16c9480c571b52620559e8
+  TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   yoga: 77ef683428c2437b3252e0edbc9f15198e1a1d44
 
-PODFILE CHECKSUM: 1a3a01932e89e97e23127ea4d90b8efbeef752da
+PODFILE CHECKSUM: 0fc4f0978bb52035a3e887af03e50ac5e5707651
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.6.1

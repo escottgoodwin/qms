@@ -1,10 +1,11 @@
 import React from 'react'
 import TouchID from 'react-native-touch-id';
-import { AsyncStorage, KeyboardAvoidingView, StyleSheet, Image, Text, View, TextInput } from 'react-native'
-import { Mutation } from "react-apollo"
+import * as Keychain from 'react-native-keychain';
+import { AsyncStorage, KeyboardAvoidingView, StyleSheet, Image, Text, View, TextInput, Alert } from 'react-native'
+import { Mutation, withApollo } from "react-apollo"
 import { execute, makePromise } from 'apollo-link'
 import fetch from 'node-fetch';
-import HttpLink from 'apollo-link-http'
+import {HttpLink} from 'apollo-link-http'
 import firebase from 'react-native-firebase'
 
 import { container, input, logo } from '../css'
@@ -14,51 +15,17 @@ import {LOGIN_MUTATION} from '../ApolloQueries'
 import ButtonColor from '../components/ButtonColor'
 import ErrorMutation from '../components/ErrorMutation'
 
-
-const touchIdLogin = () => {
-  TouchID.authenticate('Login with your fingerprint').then(success => {
-        // if login is successful and users want to enable Touch ID login
-    const email = AsyncStorage.getItem('EMAIL', email)
-    const password = AsyncStorage.getItem('PASSWORD', password)
-
-      const uri = 'https://quandria-be.herokuapp.com/'
-      const link = new HttpLink({ uri, fetch })
-      const operation = {
-        query: LOGIN_MUTATION,
-        variables: { email, password } //optional
-      }
-      // apollo login
-      makePromise(execute(link, operation))
-        .then(data => {
-          const { token, user } = data.mobileLogin
-          const userid = user.id
-          const newToken = AsyncStorage.setItem('AUTH_TOKEN', token)
-          const user1 = AsyncStorage.setItem('USERID', userid)
-
-          if (user.role === 'STUDENT') {
-            this.props.navigation.navigate('StudentDashboard')
-          } else {
-            authMsg = 'If you are a teacher or adminstrator, please login with your teacher app.'
-            this.setState({authMsg:authMsg, isVisibleAuth:true})
-          }
-        }
-        )
-        .catch(error =>
-          this.setState({
-          isVisibleTID: true,
-          touchIdError: 'You could not login with TouchId. Please login with your email and password'
-         }))
-     })
-}
-
-
-export default class SignIn extends React.Component {
+class SignIn extends React.Component {
 
   componentDidMount = async () => {
 
         const fcmToken = await firebase.messaging().getToken()
+        const credentials =  await Keychain.getGenericPassword()
+        if (!credentials.username) {
+          this.setState({touchId:false})
+        }
         this.setState({pushToken:fcmToken})
-
+        this.setState({email:'',password:''})
       }
 
   static navigationOptions = {
@@ -67,6 +34,7 @@ export default class SignIn extends React.Component {
 
      state = {
        email: '',
+       email1: '',
        password: '',
        graphQLError: '',
        isVisibleGraph:false,
@@ -77,6 +45,8 @@ export default class SignIn extends React.Component {
        isVisibleTID: false,
        authMsg:'',
        pushToken:'',
+       touchId:true,
+       loggedIn:'logged in no!'
      }
 
 
@@ -126,8 +96,8 @@ export default class SignIn extends React.Component {
 
           <ButtonColor
           title="Login with TouchID"
-          backgroundcolor="#282828"
-          onpress={touchIdLogin}
+          backgroundcolor="#003366"
+          onpress={() => this.touchIdLogin()}
           />
 
       {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
@@ -145,7 +115,7 @@ export default class SignIn extends React.Component {
   }
 
   _error = async error => {
-
+      this.setState({email:'',password:''})
       const gerrorMessage = error.graphQLErrors.map((err,i) => err.message)
       this.setState({ isVisibleGraph: true, graphQLError: gerrorMessage})
 
@@ -158,13 +128,16 @@ export default class SignIn extends React.Component {
 
     const { token, user } = data.mobileLogin
     const { email, password } = this.state
-
+    const username = email
     const userid = user.id
     const newToken = await AsyncStorage.setItem('AUTH_TOKEN', token)
     const user1 = await AsyncStorage.setItem('USERID', userid)
-
     const email1 = await AsyncStorage.setItem('EMAIL', email)
     const password1 = await AsyncStorage.setItem('PASSWORD', password)
+
+    await Keychain.setGenericPassword(username, password)
+
+    this.setState({email:'',password:''})
 
     if (user.role === 'STUDENT') {
       this.props.navigation.navigate('StudentDashboard')
@@ -172,11 +145,56 @@ export default class SignIn extends React.Component {
       authMsg = 'If you are a teacher or adminstrator, please login with your teacher app.'
       this.setState({authMsg:authMsg, isVisibleAuth:true})
     }
+
   }
-}
+
+  touchIdLogin = async () => {
+    TouchID.authenticate('Login with your fingerprint').then(success => {
+      })
+      .then(success => Keychain.getGenericPassword())
+      .then(credentials => {
+        const {username, password } = credentials
+        const uri = 'https://qbe1.herokuapp.com/'
+        const link = new HttpLink({ uri,fetch  })
+
+        const operation = {
+          query: LOGIN_MUTATION,
+          variables: { email:username, password:password, pushToken: this.state.pushToken }
+        }
+
+        makePromise(execute(link, operation))
+          .then(data => {
+            const { token, user } = data.data.mobileLogin
+            const userid = user.id
+            const newToken = AsyncStorage.setItem('AUTH_TOKEN', token)
+            const user1 = AsyncStorage.setItem('USERID', userid)
+
+            if (user.role === 'STUDENT') {
+              this.props.navigation.navigate('StudentDashboard')
+            } else {
+              authMsg = 'If you are a teacher or adminstrator, please login with your teacher app.'
+              this.setState({authMsg:authMsg, isVisibleAuth:true})
+            }
+          }
+          )
+          .catch(error => {
+            console.log(error)
+            this.setState({
+            isVisibleTID: true,
+            touchIdError: 'You could not login with TouchId. Please login with your email and password.'
+          })
+        })
+    })
+     .catch(error => {
+        console.log(error)
+      })
+    }
+  }
 
 const styles = StyleSheet.create({
   container,
   input,
   logo
 })
+
+export default withApollo(SignIn)

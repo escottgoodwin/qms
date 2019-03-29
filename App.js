@@ -31,28 +31,18 @@ import ChallengeDashboard from './screens/ChallengeDashboard'
 import Challenge from './screens/Challenge'
 import UserQs from './screens/UserQs'
 import UserAnswers from './screens/UserAnswers'
+import CameraLabels from './screens/CameraLabels'
 import NewQuestionModal from './components/NewQuestionModal'
+
+const url = 'qbe1.herokuapp.com/'
 
 const getToken = async () => {
   const token = await AsyncStorage.getItem('AUTH_TOKEN')
   return token
 }
 
-const getWebSocket = async () => {
-  const token = await AsyncStorage.getItem('AUTH_TOKEN')
-  return {
-    uri: 'wss://quandria-be.herokuapp.com/',
-    options: {
-      reconnect: true,
-      connectionParams: {
-        authorization: token ? `Bearer ${token}` : "",
-      }
-    }
-  }
-}
-
 const httpLink = createHttpLink({
-  uri: 'https://quandria-be.herokuapp.com/',
+  uri: `https://${url}`,
   onError: ({ networkError, graphQLErrors }) => {
     console.log('graphQLErrors', graphQLErrors)
     console.log('networkError', networkError)
@@ -60,7 +50,7 @@ const httpLink = createHttpLink({
 });
 
 const wsLink = new WebSocketLink({
-  uri: `wss://quandria-be.herokuapp.com/`,
+  uri: `wss://${url}`,
   options: {
     reconnect: true
   }
@@ -110,6 +100,7 @@ const MainStack = createStackNavigator(
     Challenge:Challenge,
     UserQs:UserQs,
     UserAnswers:UserAnswers,
+    CameraLabels:CameraLabels
   },
   {
     initialRouteName: "SignIn",
