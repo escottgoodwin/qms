@@ -81,18 +81,12 @@ class StudentDashboard extends React.Component {
                     <Courses
                     classes={studentCourses}
                     navigation={this.props.navigation}
-                        />
+                    />
 
                     {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
 
                     {isVisibleNet && <ErrorMutation error={this.state.networkError} />}
-
-                    <ButtonColor
-                    title="Create Question"
-                    backgroundcolor="#282828"
-                    onpress={() => this.props.navigation.navigate('CreateQuestion1',{ questionId1: 'cjrr2i2im00490859c72hsk2x' })}
-                    />
-
+                    <View style={{padding:15,alignItems:'center'}}>
                     <Mutation
                         mutation={LOGOUT_MUTATION}
                         variables={{ userId:userid }}
@@ -109,7 +103,7 @@ class StudentDashboard extends React.Component {
 
                         )}
                       </Mutation>
-
+                        </View>
                     </>
                       )
                     }}
