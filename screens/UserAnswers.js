@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native'
+import { AsyncStorage, StyleSheet, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native'
 import { Divider } from 'react-native-elements'
 
 import ButtonColor from '../components/ButtonColor'

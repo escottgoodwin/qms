@@ -86,7 +86,7 @@ class SignIn extends React.Component {
             {mutation => (
 
               <ButtonColor
-              title="Login with Email"
+              title="Email  Login"
               backgroundcolor="#003366"
               onpress={mutation}
               />
@@ -95,7 +95,7 @@ class SignIn extends React.Component {
           </Mutation>
 
           <ButtonColor
-          title="Login with TouchID"
+          title="TouchID  Login"
           backgroundcolor="#003366"
           onpress={() => this.touchIdLogin()}
           />

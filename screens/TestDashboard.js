@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { AsyncStorage, StyleSheet, Text, View, ScrollView } from 'react-native'
 import { Button } from 'react-native-elements'
 import { Query } from "react-apollo"
 import dateFormat from 'dateformat'
@@ -67,7 +67,7 @@ export default class TestDashboard extends React.Component {
           <ButtonColor
           title="Add Labeled Photos"
           backgroundcolor="#003366"
-          onpress={() => this.props.navigation.navigate("CameraLabels",{testId:testToRender.id})}
+          onpress={() => this.props.navigation.navigate("CameraLabel",{testId:testToRender.id})}
           />
 
           <ButtonColor

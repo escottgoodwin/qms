@@ -1,13 +1,9 @@
 import React,{Component} from 'react'
-import RNFetchBlob from 'rn-fetch-blob'
 import { KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity ,Image, Text, TextInput, View, ScrollView, Dimensions, AsyncStorage } from 'react-native'
 import { RNCamera } from 'react-native-camera'
-import { execute, makePromise } from 'apollo-link'
 import fetch from 'node-fetch';
-import {HttpLink} from 'apollo-link-http'
 import { Icon } from 'react-native-elements'
 import axios from 'axios'
-import firebase from 'react-native-firebase';
 const uuidv4 = require('uuid/v4');
 
 import { container, welcome, logo, input } from '../css'
@@ -16,12 +12,12 @@ import ButtonColor from '../components/ButtonColor'
 
 import {PHOTO_LABEL_MUTATION} from '../ApolloQueries'
 
-const Blob = RNFetchBlob.polyfill.Blob
-const fs = RNFetchBlob.fs
-window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-window.Blob = Blob
+const getToken = async () => {
+  const token = await AsyncStorage.getItem('AUTH_TOKEN')
+  return token
+}
 
-export default class CameraLabels extends Component {
+export default class CameraLabels2 extends Component {
 
   static navigationOptions = {
     title: 'Camera',
@@ -34,40 +30,7 @@ export default class CameraLabels extends Component {
     progressVisible:false,
     progress:0,
     message:'',
-    downloadUrl:''
-  }
-
-  uploadImage(uri, mime = 'application/octet-stream') {
-    return new Promise((resolve, reject) => {
-      const uploadUri = uri.replace('file://', '')
-      let uploadBlob = null
-
-      const imageRef = firebase.storage().ref('images').child('image_001')
-
-      fs.readFile(uploadUri, 'base64')
-        .then((data) => {
-          return Blob.build(data, { type: `${mime};BASE64` })
-        })
-        .then((blob) => {
-          uploadBlob = blob
-
-          const imageId = uuidv4()
-          const fileName = imageId
-          const ref = firebase.storage().ref('testpanels').child(fileName)
-          return imageRef.put(blob, { contentType: mime })
-
-        })
-        .then(() => {
-          uploadBlob.close()
-          return imageRef.getDownloadURL()
-        })
-        .then((url) => {
-          resolve(url)
-        })
-        .catch((error) => {
-          reject(error)
-      })
-    })
+    completeVisible:''
   }
 
  takePicture = async () => {
@@ -78,37 +41,52 @@ export default class CameraLabels extends Component {
       const options = { quality: 0.25, base64: true }
       const image = await this.camera.takePictureAsync(options)
 
+      const sessionId = new Date().getTime()
 
-      const storage = firebase.storage();
-      const sessionId = new Date().getTime();
-      firebase.storage()
-        .ref('testpanels')
-        .child(`${sessionId}`)
-        .putFile(image.uri)
-        .then(uploadedFile => {
-           const fbUrl =  uploadedFile.getDownloadURL()
-            const operation = {
-              query: PHOTO_LABEL_MUTATION,
-              variables: { link:fbUrl, label: this.state.label, testId: testId }
-            }
+      let base64Img = `data:image/jpg;base64,${image.base64}`
 
-            makePromise(execute(link, operation))
-              .then(data => {
-                console.log(data)
-                this.setState({message:"Uploaded!"})
-            //    this.props.navigation.navigate('TestDashboard',{ testId: testId })
-              })
-              .catch(error => {
-                console.log(error)
-                this.setState({
-                isVisibleError: true,
-                photoError: 'Photo could not be processed. Try again.'
-              })
-            })
-          })
-        .catch(err => {
-          console.log('error',err)
-        });
+      //Add your cloud name
+      let apiUrl = 'https://api.cloudinary.com/v1_1/dkucuwpta/image/upload';
+
+      let data = {
+        "file": base64Img,
+        "upload_preset": "tx7xnbvf",
+      }
+
+      fetch(apiUrl, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json'
+        },
+        method: 'POST',
+      }).then(async r => {
+          let data = await r.json()
+          console.log(data.secure_url)
+          const token = await getToken()
+
+          axios({
+             url: 'https://qbe1.herokuapp.com/',
+             method: 'post',
+             headers: {
+               authorization: this.props.token ? `Bearer ${this.props.token}` : "",
+             },
+             data: {
+               query: PHOTO_LABEL_MUTATION,
+               variables: { link: data.secure_url, label: this.state.label, testId: testId }
+
+               }
+           }).then(result => {
+             let grapqhql_resp = result.request.response
+             let panels = JSON.parse(grapqhql_resp)
+             that.setState({message:'Uploaded!',completeVisible:true})
+           })
+           .catch(err=>console.log(err)
+           this.setState({photoError:'Could not upload image. Try again.',isVisibleError:true})
+         )
+      })
+      .catch(err=>console.log(err)
+      this.setState({photoError:'Could not upload image. Try again.',isVisibleError:true})
+    )
 
       this.setState({label:''})
 
@@ -141,14 +119,14 @@ export default class CameraLabels extends Component {
         </Text>
         }
 
-        {progressVisible &&
+        {completeVisible &&
         <Text style={{color:'green'}}>
-        {this.state.progress}%
+        Uploaded! Upload more? Image List?
         </Text>
         }
 
         <Text style={{color:'red'}}>
-        Camera Label 1
+        Camera Label 2
         </Text>
 
        <TextInput

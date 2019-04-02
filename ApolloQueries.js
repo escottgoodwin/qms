@@ -37,6 +37,18 @@ query CourseQuery($courseid:ID!){
 }
 `
 
+export const PHOTO_LABEL_MUTATION = gql`
+mutation AddLabeledPhotoMutation($link: String!, $label:String!, $testId: ID!){
+  addLabeledPhoto(link:$link,
+  label:$label,
+  testId:$testId){
+    id
+    link
+    label
+  }
+}
+`
+
 const USER_COURSE_QUERY = gql`
 query UserQuery($userid: ID!) {
   user(id: $userid){

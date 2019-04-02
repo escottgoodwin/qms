@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Image, Text, View, ScrollView, TextInput, FlatList, TouchableOpacity, Dimensions} from 'react-native'
+import { AsyncStorage, StyleSheet, Image, Text, View, ScrollView, TextInput, FlatList, TouchableOpacity, Dimensions} from 'react-native'
 import { Button, Card } from 'react-native-elements'
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button'
 

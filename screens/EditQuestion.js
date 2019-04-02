@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, ScrollView } from 'react-native'
+import { AsyncStorage, StyleSheet, ScrollView } from 'react-native'
 
 import { Query } from "react-apollo"
 

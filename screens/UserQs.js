@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native'
+import { AsyncStorage, StyleSheet, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native'
 import { Query } from "react-apollo"
 
 import { container, welcome, instructions, button } from '../css'

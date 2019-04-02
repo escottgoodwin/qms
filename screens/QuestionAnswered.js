@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Platform, FlatList, Image, Text, View, ScrollView, TouchableOpacity} from 'react-native'
+import { AsyncStorage, StyleSheet, Platform, FlatList, Image, Text, View, ScrollView, TouchableOpacity} from 'react-native'
 import { Button, Card, Icon } from 'react-native-elements'
 
 import { Query } from "react-apollo"

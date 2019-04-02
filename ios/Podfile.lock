@@ -219,6 +219,8 @@ PODS:
     - React/RCTBlob
   - rn-fetch-blob (0.10.6):
     - React/Core
+  - RNFS (2.13.3):
+    - React
   - RNGestureHandler (1.0.16):
     - React
   - RNKeychain (3.1.1):
@@ -256,6 +258,7 @@ DEPENDENCIES:
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -301,6 +304,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
@@ -345,12 +350,13 @@ SPEC CHECKSUMS:
   React: e4fc8313fddcafa6457842be3a670c463c01e967
   react-native-camera: 8a7658ffe5ae3bbdc9718b650970eba2628ee13c
   rn-fetch-blob: 766f85cabd2992300dfa1be2bc9e4e258abc6f04
+  RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNGestureHandler: 0438a761e8f29be3b809f9e7e43014f3aba4d7a6
   RNKeychain: 1a121521011702409f5a1009eb8a1effa81000f3
   RNVectorIcons: cb42a5653c046f12ca16c9480c571b52620559e8
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   yoga: 77ef683428c2437b3252e0edbc9f15198e1a1d44
 
-PODFILE CHECKSUM: 0fc4f0978bb52035a3e887af03e50ac5e5707651
+PODFILE CHECKSUM: a07b127c4b92b29359aafb6e7ce67f9dedff3bf0
 
 COCOAPODS: 1.6.1

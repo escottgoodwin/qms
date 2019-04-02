@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Image, Text, View, ScrollView, TextInput } from 'react-native'
+import { AsyncStorage, StyleSheet, Image, Text, View, ScrollView, TextInput } from 'react-native'
 const moment = require('moment')
 
 import { Query, Mutation } from "react-apollo"

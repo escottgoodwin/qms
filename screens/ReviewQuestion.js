@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Platform, Image, Text, Dimensions, View, ScrollView,TextInput,Alert} from 'react-native'
+import { AsyncStorage, StyleSheet, Platform, Image, Text, Dimensions, View, ScrollView,TextInput,Alert} from 'react-native'
 import { Button, Icon, Divider } from 'react-native-elements'
 
 import { Query, Mutation } from "react-apollo"

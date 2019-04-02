@@ -1,6 +1,6 @@
 import '@babel/polyfill'
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import NavigationService from './NavigationService';
 import { ApolloClient } from 'apollo-client';
@@ -11,7 +11,6 @@ import { getMainDefinition } from 'apollo-utilities';
 import { split } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
-import { AsyncStorage } from "react-native"
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 import { fromTop, fromBottom, fadeIn } from 'react-navigation-transitions'
@@ -32,6 +31,7 @@ import Challenge from './screens/Challenge'
 import UserQs from './screens/UserQs'
 import UserAnswers from './screens/UserAnswers'
 import CameraLabels from './screens/CameraLabels'
+import CameraLabel from './screens/CameraLabel'
 import NewQuestionModal from './components/NewQuestionModal'
 
 const url = 'qbe1.herokuapp.com/'
@@ -100,7 +100,8 @@ const MainStack = createStackNavigator(
     Challenge:Challenge,
     UserQs:UserQs,
     UserAnswers:UserAnswers,
-    CameraLabels:CameraLabels
+    CameraLabels:CameraLabels,
+    CameraLabel:CameraLabel
   },
   {
     initialRouteName: "SignIn",
