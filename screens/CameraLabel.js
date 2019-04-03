@@ -37,7 +37,6 @@ export default class CameraLabel extends Component {
   state = {
     label:'',
     isVisibleError: false,
-    photoError: '',
     progressVisible:false,
     progress:0,
     message:'',
@@ -53,7 +52,8 @@ export default class CameraLabel extends Component {
   takePicture = async (label) => {
 
     if (this.state.label.length === 0 || !this.state.label.trim()) {
-       this.setState({message:'Please enter a label',completeVisible:true})
+       this.setState({message:'Please enter a label',isVisibleError:true})
+       return
     }
 
      if (this.camera) {
@@ -137,7 +137,7 @@ export default class CameraLabel extends Component {
          this.setState({message:'Uploaded!', completeVisible:true, progress:0, progressVisible:false})
        })
        .catch(err=> {
-         this.setState({photoError:'Unable to upload photo2. Please try again.',isVisibleError:true})
+         this.setState({message:'Unable to upload photo. Please try again.',isVisibleError:true})
        })
 
        this.setState({label:''})
@@ -148,7 +148,7 @@ export default class CameraLabel extends Component {
 
     const { navigation } = this.props
     const testId = navigation.getParam('testId', 'NO-ID')
-    const { label, isVisibleError, photoError, progressVisible, progress, message, completeVisible, token  } = this.state
+    const { label, isVisibleError, progressVisible, progress, message, completeVisible, token  } = this.state
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -166,17 +166,24 @@ export default class CameraLabel extends Component {
 
           }}
         >
+
         {isVisibleError &&
-        <Text style={photoError}>
-        {photoError}
+        <>
+        <Text style={{color:'red', padding:20,fontSize:24}}>
+        {message}
         </Text>
-        }
+
+        <ButtonColor
+        title="Dismiss"
+        backgroundcolor="red"
+        onpress={() => this.setState({isVisibleError:false})}
+        />
+        </>}
 
         {progressVisible &&
         <Text style={{color:'blue', padding:20,fontSize:24}}>
         {progress}%
-        </Text>
-        }
+        </Text>}
 
         {completeVisible ?
           <>
