@@ -189,6 +189,8 @@ PODS:
     - React
   - react-native-camera/RN (2.0.1):
     - React
+  - react-native-image-resizer (1.0.1):
+    - React
   - React/Core (0.58.0-rc.2):
     - yoga (= 0.58.0-rc.2.React)
   - React/fishhook (0.58.0-rc.2)
@@ -246,6 +248,7 @@ DEPENDENCIES:
   - Firebase/RemoteConfig (~> 5.15.0)
   - Firebase/Storage (~> 5.15.0)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - React/Core (from `../node_modules/react-native`)
   - React/RCTActionSheet (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
@@ -302,6 +305,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-image-resizer:
+    :path: "../node_modules/react-native-image-resizer"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
   RNFS:
@@ -349,6 +354,7 @@ SPEC CHECKSUMS:
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   React: e4fc8313fddcafa6457842be3a670c463c01e967
   react-native-camera: 8a7658ffe5ae3bbdc9718b650970eba2628ee13c
+  react-native-image-resizer: 48eb06a18a6d0a632ffa162a51ca61a68fb5322f
   rn-fetch-blob: 766f85cabd2992300dfa1be2bc9e4e258abc6f04
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNGestureHandler: 0438a761e8f29be3b809f9e7e43014f3aba4d7a6
@@ -357,6 +363,6 @@ SPEC CHECKSUMS:
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   yoga: 77ef683428c2437b3252e0edbc9f15198e1a1d44
 
-PODFILE CHECKSUM: a07b127c4b92b29359aafb6e7ce67f9dedff3bf0
+PODFILE CHECKSUM: 3684e8df3411586bd02ecd29f4de3e781c464275
 
 COCOAPODS: 1.6.1

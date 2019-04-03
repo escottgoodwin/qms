@@ -149,8 +149,7 @@ class SignIn extends React.Component {
   }
 
   touchIdLogin = async () => {
-    TouchID.authenticate('Login with your fingerprint').then(success => {
-      })
+    TouchID.authenticate('Login with your fingerprint')
       .then(success => Keychain.getGenericPassword())
       .then(credentials => {
         const {username, password } = credentials

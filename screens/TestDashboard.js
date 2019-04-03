@@ -1,6 +1,5 @@
 import React from 'react'
 import { AsyncStorage, StyleSheet, Text, View, ScrollView } from 'react-native'
-import { Button } from 'react-native-elements'
 import { Query } from "react-apollo"
 import dateFormat from 'dateformat'
 

@@ -138,3 +138,37 @@ export const messages = {
  fontSize:18,
  color:'#bb6a6a'
 }
+
+export const preview = {
+ flex: 1,
+ justifyContent: 'flex-end',
+ alignItems: 'center',
+ height: '100%',
+ width: '100%',
+}
+
+export const camera =  {
+ borderRadius:50,
+ borderColor:'red',
+ borderWidth:4,
+ padding:10,
+ margin:10
+}
+
+export const progress = {
+  color:'blue',
+  fontSize:24,
+  padding:20
+}
+
+export const complete = {
+  color:'green',
+  fontSize:24,
+  padding:20
+}
+
+export const photoError = {
+  color:'red',
+  fontSize:24,
+  padding:20
+}

@@ -30,7 +30,6 @@ import ChallengeDashboard from './screens/ChallengeDashboard'
 import Challenge from './screens/Challenge'
 import UserQs from './screens/UserQs'
 import UserAnswers from './screens/UserAnswers'
-import CameraLabels from './screens/CameraLabels'
 import CameraLabel from './screens/CameraLabel'
 import NewQuestionModal from './components/NewQuestionModal'
 
@@ -100,7 +99,6 @@ const MainStack = createStackNavigator(
     Challenge:Challenge,
     UserQs:UserQs,
     UserAnswers:UserAnswers,
-    CameraLabels:CameraLabels,
     CameraLabel:CameraLabel
   },
   {

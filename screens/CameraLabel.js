@@ -2,20 +2,31 @@ import React,{Component} from 'react'
 import { KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity ,Image, Text, TextInput, View, ScrollView, Dimensions, AsyncStorage } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import fetch from 'node-fetch';
-import { Icon, Button } from 'react-native-elements'
+import { Icon } from 'react-native-elements'
 import axios from 'axios'
-const uuidv4 = require('uuid/v4');
+import ImageResizer from 'react-native-image-resizer'
+import RNFS from 'react-native-fs'
 
-import { container, welcome, logo, input } from '../css'
+import { container, welcome, logo, input, preview, camera, progress, complete, photoError } from '../css'
 
 import ButtonColor from '../components/ButtonColor'
 
 import {PHOTO_LABEL_MUTATION} from '../ApolloQueries'
 
+const uuidv4 = require('uuid/v4')
+
 const getToken = async () => {
   const token = await AsyncStorage.getItem('AUTH_TOKEN')
   return token
 }
+
+const resizeBase64 = async (path) => {
+  const newPath = path.replace('file://', '')
+  const resizedImageUrl = await ImageResizer.createResizedImage(newPath, 800, 600, 'PNG', 80, 0, RNFS.DocumentDirectoryPath)
+  const base64 = await RNFS.readFile(resizedImageUrl, 'base64')
+  return base64
+}
+
 
 export default class CameraLabel extends Component {
 
@@ -39,69 +50,105 @@ export default class CameraLabel extends Component {
     this.setState({token})
   }
 
- takePicture = async (label) => {
+  takePicture = async (label) => {
 
-    if (this.camera) {
+    if (this.state.label.length === 0 || !this.state.label.trim()) {
+       this.setState({message:'Please enter a label',completeVisible:true})
+    }
 
-      const { navigation } = this.props
-      const testId = navigation.getParam('testId', 'NO-ID')
-      const options = { quality: .25, base64: true }
-      const image = await this.camera.takePictureAsync(options)
+     if (this.camera) {
 
-      const sessionId = new Date().getTime()
+       const { navigation } = this.props
+       const testId = navigation.getParam('testId', 'NO-ID')
+       const options = { quality: .25, base64:true, doNotSave: true }
+       const image = await this.camera.takePictureAsync(options)
 
-      let base64Img = `data:image/jpg;base64,${image.base64}`
+       const sessionId = new Date().getTime()
+       let base64Img = `data:image/jpg;base64,${image.base64}`
 
-      //Add your cloud name
-      let apiUrl = 'https://api.cloudinary.com/v1_1/dkucuwpta/image/upload';
+       //const resizedImage = await ImageResizer.createResizedImage(base64Img, 600, 800, 'PNG', 80, 0, RNFS.DocumentDirectoryPath)
+       //console.log(resizedImage)
 
-      let data = {
-        "file": base64Img,
-        "upload_preset": "tx7xnbvf",
-      }
+       //const base64Resized = await RNFS.readFile(resizedImage.uri, 'base64')
 
-      fetch(apiUrl, {
-        body: JSON.stringify(data),
-        headers: {
-          'content-type': 'application/json'
-        },
-        method: 'POST',
-      }).then(async r => {
-          let data = await r.json()
-          console.log(data.secure_url)
+       //const base64Upload = `data:image/png;base64,${base64Resized}`
 
-          console.log(this.state.token)
-          console.log('label',label)
-          axios({
-             url: 'https://qbe1.herokuapp.com/',
-             method: 'post',
-             headers: {
-               authorization: this.state.token ? `Bearer ${this.state.token}` : "",
-             },
-             data: {
-               query: PHOTO_LABEL_MUTATION,
-               variables: { link: data.secure_url, label: label, testId: testId }
-               }
-           })
-           .then(data => {
-             const graphQLresponse = data.data.data.addLabeledPhoto
-             this.setState({message:'Uploaded!',completeVisible:true})
-           })
-           .catch(err => { console.log(err) })
-      })
-      .catch(err=> {console.log(err)
+       let apiUrl = 'https://api.cloudinary.com/v1_1/dkucuwpta/image/upload'
 
-    })
+       let data = {
+         "file": base64Img,
+         "upload_preset": "tx7xnbvf",
+       }
 
-      this.setState({label:''})
+       let axiosData = {
+           url: apiUrl,
+           method: 'post',
+           headers: {
+             'content-type': 'application/json'
+           },
+           data:{
+             file: base64Img,
+             upload_preset: "tx7xnbvf",
+           },
+           onUploadProgress: (p) => {
+            this.setState({progress:p})
+          }
+        }
 
-  }
-}
+       //fetch(apiUrl, {
+      //   body: JSON.stringify(data),
+      //   headers: {
+      //     'content-type': 'application/json'
+      //   },
+      //   method: 'POST',
+      // })
+       this.setState({progressVisible:true})
+       axios({
+           url: apiUrl,
+           method: 'post',
+           headers: {
+             'content-type': 'application/json'
+           },
+           data:{
+             file: base64Img,
+             upload_preset: "tx7xnbvf",
+           },
+           onUploadProgress: (progressEvent) => {
+            let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total )
+            this.setState({progress:percentCompleted})
+          }
+        })
+       .then(response => {
+
+           return axios({
+              url: 'https://qbe1.herokuapp.com/',
+              method: 'post',
+              headers: {
+                authorization: this.state.token ? `Bearer ${this.state.token}` : "",
+              },
+              data: {
+                query: PHOTO_LABEL_MUTATION,
+                variables: { link: response.data.secure_url, label: label, testId: testId }
+              },
+            })
+       })
+       .then(data => {
+         const graphQLresponse = data.data.data.addLabeledPhoto
+         this.setState({message:'Uploaded!', completeVisible:true, progress:0, progressVisible:false})
+       })
+       .catch(err=> {
+         this.setState({photoError:'Unable to upload photo2. Please try again.',isVisibleError:true})
+       })
+
+       this.setState({label:''})
+     }
+   }
 
   render() {
+
     const { navigation } = this.props
     const testId = navigation.getParam('testId', 'NO-ID')
-    const { label, isVisibleError, photoError, progressVisible, progress, completeVisible, token  } = this.state
+    const { label, isVisibleError, photoError, progressVisible, progress, message, completeVisible, token  } = this.state
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -116,51 +163,41 @@ export default class CameraLabel extends Component {
           permissionDialogTitle={'Permission to use camera'}
           permissionDialogMessage={'We need your permission to use your camera phone'}
           onGoogleVisionBarcodesDetected={({ barcodes }) => {
-            console.log(barcodes)
+
           }}
         >
         {isVisibleError &&
-        <Text style={{color:'red'}}>
-        {this.state.photoError}
+        <Text style={photoError}>
+        {photoError}
         </Text>
         }
 
-        {completeVisible &&
+        {progressVisible &&
+        <Text style={{color:'blue', padding:20,fontSize:24}}>
+        {progress}%
+        </Text>
+        }
+
+        {completeVisible ?
           <>
-        <Text style={{color:'green',fontSize:24,padding:20}}>
-        {this.state.message}
+        <Text style={complete}>
+          {message}
         </Text>
-        <View style={{padding:20}}>
-        <Button
-          raised
-          title='Take More'
-          buttonStyle={{
-          backgroundColor: 'red',
-          height: 45,
-          borderColor: "transparent",
-          borderRadius: 10,
-          }}
-          onPress={() => this.setState({completeVisible:false})}
-        />
-        </View>
 
-        <View style={{padding:20}}>
-        <Button
-          raised
-          title='Test Photos'
-          buttonStyle={{
-          backgroundColor: 'blue',
-          height: 45,
-          borderColor: "transparent",
-          borderRadius: 10,
-          }}
-          onPress={() => this.props.navigation.navigate('TestDashboard',{testId:testId})}
+        <ButtonColor
+        title="Take More"
+        backgroundcolor="green"
+        onpress={() => this.setState({completeVisible:false})}
         />
-        </View>
+
+        <ButtonColor
+        title="Test Photos"
+        backgroundcolor="blue"
+        onpress={() => this.props.navigation.navigate('TestDashboard',{testId:testId})}
+        />
         </>
-
-        }
-
+        :
+        <>
        <TextInput
         placeholder='Label'
         style={styles.input}
@@ -169,8 +206,8 @@ export default class CameraLabel extends Component {
         />
 
         <TouchableOpacity
-        style={{borderRadius:50,borderColor:'red',borderWidth:4,padding:10, margin:10}}
-        onPress={() => this.takePicture(label)} >
+         style={camera}
+         onPress={() => this.takePicture(label)} >
 
         <Icon
           name='camera'
@@ -180,6 +217,8 @@ export default class CameraLabel extends Component {
            />
 
           </TouchableOpacity>
+        </>}
+
         </RNCamera>
 
 
@@ -193,11 +232,9 @@ const styles = StyleSheet.create({
   logo,
   welcome,
   input,
-  preview: {
-   flex: 1,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
-   height: '100%',
-   width: '100%'
- },
+  preview,
+  camera,
+  progress,
+  complete,
+  photoError
 })

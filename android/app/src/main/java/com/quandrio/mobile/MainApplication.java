@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.oblador.keychain.KeychainPackage;
 import com.rnfingerprint.FingerprintAuthPackage;
@@ -48,6 +49,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
         new MainReactPackage(),
+            new ImageResizerPackage(),
             new RNCameraPackage(),
             new KeychainPackage(),
             new FingerprintAuthPackage(),
