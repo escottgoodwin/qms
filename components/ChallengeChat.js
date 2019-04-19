@@ -42,7 +42,7 @@ export default class ChallengeChat extends React.Component {
     return (
       <View >
 
-            <Query query={CHALLENGE_MESSAGE_QUERY} variables={{ challengeId: challengeId }}>
+            <Query query={CHALLENGE_MESSAGE_QUERY} variables={{ challengeId: challengeId }} fetchPolicy="cache-and-network">
                   {({ loading, error, data, subscribeToMore }) => {
                     if (loading) return <SpinnerLoading1 />
                     if (error) return <ErrorComponent {...error}/>

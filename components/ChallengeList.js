@@ -18,7 +18,7 @@ export default class ChallengeList extends React.Component {
     const { navigation } = this.props
 
     return(
-      <Query query={CHALLENGE_QUESTION_QUERY} variables={{ questionId: this.props.questionToRender.question.id }}>
+      <Query query={CHALLENGE_QUESTION_QUERY} variables={{ questionId: this.props.questionToRender.question.id }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <ErrorComponent {...error}/>

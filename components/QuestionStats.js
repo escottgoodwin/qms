@@ -14,7 +14,7 @@ export default class QuestionStats extends React.Component {
 
     return(
 
-      <Query query={USER_QUESTION_QUERY} variables={{ testId: this.props.testId }}>
+      <Query query={USER_QUESTION_QUERY} variables={{ testId: this.props.testId }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <ErrorComponent {...error}/>

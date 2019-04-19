@@ -45,7 +45,7 @@ export default class TestDashboard extends React.Component {
     return (
       <View style={styles.container}>
       <ScrollView>
-      <Query query={TEST_QUERY} variables={{ test_id: testId }}>
+      <Query query={TEST_QUERY} variables={{ test_id: testId }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1  />
               if (error) return <Error {...error}/>
@@ -73,6 +73,12 @@ export default class TestDashboard extends React.Component {
           title="All Questions"
           backgroundcolor="#1abc9c"
           onpress={() => this.props.navigation.navigate('AllQuestions',{testId:testToRender.id})}
+          />
+
+          <ButtonColor
+          title="All Photos"
+          backgroundcolor="#003366"
+          onpress={() => this.props.navigation.navigate("AllPhotos",{testId:testToRender.id})}
           />
 
           <ButtonColor

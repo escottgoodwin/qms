@@ -5,6 +5,7 @@ import { Divider } from 'react-native-elements'
 import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
 import TestHeader from '../components/TestHeader'
+import Loading1 from '../components/Loading1'
 
 import { Query } from "react-apollo"
 
@@ -60,9 +61,9 @@ export default class UserAnswer extends React.Component {
 
           <Text style={styles.welcome}>Your Answers</Text>
 
-          <Query query={USER_ANSWERED_QUERY} variables={{ testId: testId }}>
+          <Query query={USER_ANSWERED_QUERY} variables={{ testId: testId }} fetchPolicy="cache-and-network">
                 {({ loading, error, data }) => {
-                  if (loading) return <Loading1 />
+                  if (loading) return <SpinnerLoading1  />
                   if (error) return <Error {...error}/>
 
                   const userAnsweredStats = data.userAnsweredStats
@@ -79,7 +80,7 @@ export default class UserAnswer extends React.Component {
         }}
         </Query>
 
-        <Query query={USER_ANSWERS_QUERY} variables={{ testId: testId }}>
+        <Query query={USER_ANSWERS_QUERY} variables={{ testId: testId }} fetchPolicy="cache-and-network">
               {({ loading, error, data }) => {
                 if (loading) return <SpinnerLoading1 />
                 if (error) return <Error {...error}/>

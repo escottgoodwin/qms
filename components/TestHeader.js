@@ -14,7 +14,7 @@ export default class TestHeader extends React.Component {
   render() {
 
     return(
-      <Query query={TEST_HEADER_QUERY} variables={{ testId: this.props.testId }}>
+      <Query query={TEST_HEADER_QUERY} variables={{ testId: this.props.testId }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <ErrorComponent {...error}/>

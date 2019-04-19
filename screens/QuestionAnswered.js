@@ -46,7 +46,7 @@ export default class QuestionAnswered extends React.Component {
     return (
       <ScrollView >
       <View style={styles.container}>
-      <Query query={ANSWERED_QUESTION_QUERY} variables={{ answerId: answerId }}>
+      <Query query={ANSWERED_QUESTION_QUERY} variables={{ answerId: answerId }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error}/>

@@ -3,11 +3,7 @@ import { AsyncStorage, StyleSheet, Image, Text, View, ScrollView } from 'react-n
 import { Query, Mutation } from "react-apollo"
 import { container, button } from '../css'
 
-import {
-        USER_COURSE_QUERY,
-        LOGOUT_MUTATION,
-        STORE_TOKEN
-        } from '../ApolloQueries'
+import { USER_COURSE_QUERY, LOGOUT_MUTATION,STORE_TOKEN } from '../ApolloQueries'
 
 import ButtonColor from '../components/ButtonColor'
 import DashboardHeader from '../components/DashboardHeader'
@@ -23,7 +19,6 @@ import Error from '../components/Error'
   }
 
 class StudentDashboard extends React.Component {
-
 
     state = {
       userid: '',
@@ -61,7 +56,7 @@ class StudentDashboard extends React.Component {
       <View style={styles.container}>
       <ScrollView>
 
-          <Query query={USER_COURSE_QUERY} variables={{ userid: userid }}>
+          <Query query={USER_COURSE_QUERY} variables={{ userid: userid }} >
                 {({ loading, error, data }) => {
                   if (loading) return <SpinnerLoading1 />
                   if (error) return <Error {...error}/>
@@ -72,7 +67,7 @@ class StudentDashboard extends React.Component {
 
 
                   return (
-                      <>
+                    <>
                     <DashboardHeader
                     name={fullName}
                     image='../assets/RNFirebase.png'

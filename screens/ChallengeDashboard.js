@@ -59,7 +59,7 @@ export default class ChallengeDashboard extends React.Component {
       <View style={styles.container}>
       <ScrollView >
 
-        <Query query={CHALLENGE_ANSWER_QUERY} variables={{ questionId: questionId }}>
+        <Query query={CHALLENGE_ANSWER_QUERY} variables={{ questionId: questionId }} fetchPolicy="cache-and-network">
               {({ loading, error, data }) => {
                 if (loading) return <SpinnerLoading1 />
                 if (error) return <Error {...error}/>

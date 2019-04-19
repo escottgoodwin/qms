@@ -54,7 +54,7 @@ export default class Challenge extends React.Component {
       <View style={styles.container}>
       <ScrollView>
 
-      <Query query={CHALLENGE_QUERY} variables={{ challengeId: challengeId }}>
+      <Query query={CHALLENGE_QUERY} variables={{ challengeId: challengeId }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error}/>

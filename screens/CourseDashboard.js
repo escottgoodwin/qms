@@ -42,7 +42,7 @@ export default class CourseDashboard extends React.Component {
     return (
       <ScrollView contentContainerStyle={styles.container}>
 
-      <Query query={COURSE_QUERY} variables={{ courseid: courseId }}>
+      <Query query={COURSE_QUERY} variables={{ courseid: courseId }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error}/>

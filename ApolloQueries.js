@@ -633,6 +633,19 @@ const SEND_QUESTION_MUTATION = gql`
     }
     `
 
+    const TEST_PANEL_STATS_QUERY = gql`
+    query PanelQuery($testId:ID!){
+      testPanelStats(testId:$testId){
+          id
+          panelLink
+          total
+          totalCorrect
+        	percentCorrect
+          question
+        }
+      }
+    `
+
 
 export {
   COURSE_QUERY,
@@ -662,5 +675,6 @@ export {
   CHALLENGE_MESSAGE_QUERY,
   CHALLENGE_MESSAGE_SUBSCRIPTION,
   CHALLENGE_QUESTION_QUERY,
-  USER_QUESTION_QUERY
+  USER_QUESTION_QUERY,
+  TEST_PANEL_STATS_QUERY
 }

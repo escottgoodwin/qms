@@ -80,7 +80,7 @@ export default class CreateQuestion extends React.Component {
     return(
       <View style={styles.container}>
       <ScrollView >
-      <Query query={CREATE_QUESTION_QUERY} variables={{ questionId: questionId1 }}>
+      <Query query={CREATE_QUESTION_QUERY} variables={{ questionId: questionId1 }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error} />
@@ -203,7 +203,7 @@ export default class CreateQuestion extends React.Component {
              backgroundcolor="#282828"
              onpress={() => this.props.navigation.navigate('StudentDashboard')}
              />
-             
+
              </View>
              </>
            )

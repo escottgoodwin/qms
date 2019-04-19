@@ -60,7 +60,7 @@ export default class ReviewQuestion extends React.Component {
 
       <ScrollView >
       <View style={styles.container}>
-      <Query query={QUESTION_QUERY} variables={{ questionId: newQuestionId }}>
+      <Query query={QUESTION_QUERY} variables={{ questionId: newQuestionId }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error} />

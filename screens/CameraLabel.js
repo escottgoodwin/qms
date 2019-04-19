@@ -75,33 +75,6 @@ export default class CameraLabel extends Component {
 
        let apiUrl = 'https://api.cloudinary.com/v1_1/dkucuwpta/image/upload'
 
-       let data = {
-         "file": base64Img,
-         "upload_preset": "tx7xnbvf",
-       }
-
-       let axiosData = {
-           url: apiUrl,
-           method: 'post',
-           headers: {
-             'content-type': 'application/json'
-           },
-           data:{
-             file: base64Img,
-             upload_preset: "tx7xnbvf",
-           },
-           onUploadProgress: (p) => {
-            this.setState({progress:p})
-          }
-        }
-
-       //fetch(apiUrl, {
-      //   body: JSON.stringify(data),
-      //   headers: {
-      //     'content-type': 'application/json'
-      //   },
-      //   method: 'POST',
-      // })
        this.setState({progressVisible:true})
        axios({
            url: apiUrl,
@@ -200,7 +173,7 @@ export default class CameraLabel extends Component {
         <ButtonColor
         title="Test Photos"
         backgroundcolor="blue"
-        onpress={() => this.props.navigation.navigate('TestDashboard',{testId:testId})}
+        onpress={() => this.props.navigation.navigate('AllPhotos',{testId:testId})}
         />
         </>
         :

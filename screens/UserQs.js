@@ -49,9 +49,9 @@ export default class UserQs extends React.Component {
 
           <Text style={styles.welcome}>Your Questions</Text>
 
-          <Query query={USER_QUESTION_STATS_QUERY} variables={{ testId: testId }}>
+          <Query query={USER_QUESTION_STATS_QUERY} variables={{ testId: testId }} fetchPolicy="cache-and-network">
                 {({ loading, error, data }) => {
-                  if (loading) return <Loading1 />
+                  if (loading) return <SpinnerLoading1  />
                   if (error) return <Error {...error}/>
 
                   const userQuestionStats = data.userQuestionStats
@@ -74,7 +74,7 @@ export default class UserQs extends React.Component {
         }}
         </Query>
 
-        <Query query={USER_QUESTIONS_QUERY} variables={{ testId: testId }}>
+        <Query query={USER_QUESTIONS_QUERY} variables={{ testId: testId }} fetchPolicy="cache-and-network">
               {({ loading, error, data }) => {
                 if (loading) return <SpinnerLoading1 />
                 if (error) return <Error {...error}/>

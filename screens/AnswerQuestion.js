@@ -67,7 +67,7 @@ _onSelect = ( item ) => {
       <View style={styles.container}>
       <ScrollView >
 
-      <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId }}>
+      <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId }} fetchPolicy="cache-and-network">
             {({ loading, error, data }) => {
               if (loading) return <SpinnerLoading1 />
               if (error) return <Error {...error}/>
