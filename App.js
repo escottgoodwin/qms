@@ -168,7 +168,7 @@ export default class App extends React.Component {
             // Get information about the notification that was opened
             const notification: Notification = notificationOpen.notification
             console.log('click on',notification.data.questionId)
-            NavigationService.navigate('CreateQuestion',{ questionId1: notification.data.questionId })
+            NavigationService.navigate('CreateQuestion1',{ questionId1: notification.data.questionId })
 
         })
 
@@ -180,7 +180,7 @@ export default class App extends React.Component {
              // Get information about the notification that was opened
              const notification: Notification = notificationOpen.notification
              console.log('notification initial',notificationOpen.data.questionId)
-             NavigationService.navigate('CreateQuestion',{ questionId1: notification.data.questionId })
+             NavigationService.navigate('CreateQuestion1',{ questionId1: notification.data.questionId })
 
          }
       }
