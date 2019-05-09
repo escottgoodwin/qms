@@ -19,6 +19,7 @@ import SignIn from './screens/SignIn'
 import SignOut from './screens/SignOut'
 import StudentDashboard from './screens/StudentDashboard'
 import CourseDashboard from './screens/CourseDashboard'
+import ClassDashboard from './screens/ClassDashboard'
 import TestDashboard from './screens/TestDashboard'
 import CreateQuestion1 from './screens/CreateQuestion1'
 import EditQuestion from './screens/EditQuestion'
@@ -32,7 +33,7 @@ import UserQs from './screens/UserQs'
 import UserAnswers from './screens/UserAnswers'
 import CameraLabel from './screens/CameraLabel'
 import AllPhotos from './screens/AllPhotos'
-
+import Welcome from './screens/Welcome'
 import NewQuestionModal from './components/NewQuestionModal'
 
 const url = 'qbe1.herokuapp.com/'
@@ -41,6 +42,7 @@ const getToken = async () => {
   const token = await AsyncStorage.getItem('AUTH_TOKEN')
   return token
 }
+
 
 const httpLink = createHttpLink({
   uri: `https://${url}`,
@@ -89,6 +91,7 @@ const MainStack = createStackNavigator(
     SignIn: SignIn,
     SignOut: SignOut,
     StudentDashboard: StudentDashboard,
+    ClassDashboard: ClassDashboard,
     CourseDashboard: CourseDashboard,
     TestDashboard: TestDashboard,
     CreateQuestion1: CreateQuestion1,
@@ -102,7 +105,8 @@ const MainStack = createStackNavigator(
     UserQs:UserQs,
     UserAnswers:UserAnswers,
     CameraLabel:CameraLabel,
-    AllPhotos: AllPhotos
+    AllPhotos: AllPhotos,
+    Welcome: Welcome
   },
   {
     initialRouteName: "SignIn",
@@ -153,12 +157,11 @@ export default class App extends React.Component {
             }
         }
 
+
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
           NavigationService.navigate('MyModal',{ questionId1: notification.data.questionId })
-            console.log('notification')
         })
         this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-          console.log('notification',notification.data.questionId)
           NavigationService.navigate('MyModal',{ questionId1: notification.data.questionId, course: notification.data.course, institution: notification.data.institution, testNumber: notification.data.testNumber, subject: notification.data.subject })
         })
 
@@ -167,7 +170,6 @@ export default class App extends React.Component {
             const action = notificationOpen.action
             // Get information about the notification that was opened
             const notification: Notification = notificationOpen.notification
-            console.log('click on',notification.data.questionId)
             NavigationService.navigate('CreateQuestion1',{ questionId1: notification.data.questionId })
 
         })
@@ -179,7 +181,6 @@ export default class App extends React.Component {
              const action = notificationOpen.action
              // Get information about the notification that was opened
              const notification: Notification = notificationOpen.notification
-             console.log('notification initial',notificationOpen.data.questionId)
              NavigationService.navigate('CreateQuestion1',{ questionId1: notification.data.questionId })
 
          }

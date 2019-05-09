@@ -8,6 +8,7 @@ query CourseQuery($courseid:ID!){
     courseNumber
     time
     institution{
+      id
       name
     }
     tests{
@@ -20,10 +21,13 @@ query CourseQuery($courseid:ID!){
       questions{
         id
         challenges{
+          id
           challenge
         }
         questionAnswers{
+          id
         answer{
+          id
           choice
           correct
         }
@@ -89,7 +93,66 @@ query UserQuery($userid: ID!) {
     }
   }
 }
-`;
+`
+
+const NEW_USER_COURSE_QUERY = gql`
+query UserQuery($userid: ID!) {
+  user(id: $userid){
+    id
+    firstName
+    lastName
+    questionsSentTo{
+      id
+      test{
+        id
+        course{
+          name
+          id
+        }
+      }
+      questionAnswers{
+        id
+      }
+    }
+    invitesSentTo{
+      id
+      course{
+        id
+        courseNumber
+        name
+        time
+        institution{
+          id
+          name
+        }
+      }
+    }
+    studentCourses{
+      id
+      name
+      time
+      deleted
+      institution{
+        id
+        name
+      }
+      tests{
+        id
+        questions{
+          id
+          sentTo{
+            id
+          }
+          questionAnswers{
+            id
+          }
+        }
+      }
+
+    }
+  }
+}
+`
 
 var LOGOUT_MUTATION = gql`
     mutation {
@@ -650,6 +713,7 @@ const SEND_QUESTION_MUTATION = gql`
 export {
   COURSE_QUERY,
   USER_COURSE_QUERY,
+  NEW_USER_COURSE_QUERY,
   LOGOUT_MUTATION,
   STORE_TOKEN,
   CREATE_QUESTION_QUERY,

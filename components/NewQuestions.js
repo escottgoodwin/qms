@@ -2,23 +2,27 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native'
 
-const Courses = (props) =>
+const NewQuestions = (props) =>
+  <View style={{marginRight:'25%',marginLeft:'25%'}}>
 
     <FlatList
-    data={props.classes}
+    data={props.newQuestions}
     renderItem={
       ({ item, index }) => (
-        <TouchableOpacity style={styles.touch}
-        onPress={() => props.navigation.navigate('ClassDashboard', { courseId: item.id })}
+        <TouchableOpacity
+        style={{margin:5,padding:5,backgroundColor:'lightgreen', borderRadius:5}}
+        onPress={() => props.navigation.navigate('CreateQuestion1', { questionId1: item.id })}
         >
-        <Text style={styles.course} >{item.name}</Text>
-        <Text style={styles.course} >{item.institution.name}</Text>
+        <Text style={{color:'green',textAlign:"center",fontSize:14,}} >New Question!</Text>
+        <Text  style={{textAlign:"center",fontSize:12,}}>{item.test.course.name}</Text>
         </TouchableOpacity>
       )
     }
     keyExtractor={item => item.id}
-  />
+    />
 
+
+  </View>
 
 const styles = StyleSheet.create({
   course: {
@@ -36,4 +40,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Courses
+export default NewQuestions

@@ -2,12 +2,15 @@ import React from 'react'
 import { AsyncStorage, StyleSheet, Image, Text, View, ScrollView } from 'react-native'
 import { Query, Mutation } from "react-apollo"
 import { container, button } from '../css'
+import gql from "graphql-tag";
 
-import { USER_COURSE_QUERY, LOGOUT_MUTATION,STORE_TOKEN } from '../ApolloQueries'
+import { NEW_USER_COURSE_QUERY,USER_COURSE_QUERY, LOGOUT_MUTATION, STORE_TOKEN,  } from '../ApolloQueries'
+
 
 import ButtonColor from '../components/ButtonColor'
 import DashboardHeader from '../components/DashboardHeader'
 import Courses from '../components/Courses'
+import NewQuestions from '../components/NewQuestions'
 import SpinnerLoading1 from '../components/SpinnerLoading1'
 import Error from '../components/Error'
 
@@ -36,10 +39,10 @@ class StudentDashboard extends React.Component {
   componentDidMount = async () => {
 
     const token = await AsyncStorage.getItem('AUTH_TOKEN')
-
-    if (!token) {
-      this.props.navigation.navigate('ReSignIn',{reDirectScreen:'StudentDashboard',reDirectParams:null})
-    }
+    console.log(token)
+    //if (!token) {
+    //  this.props.navigation.navigate('ReSignIn',{reDirectScreen:'StudentDashboard',reDirectParams:null})
+    //}
 
     const userid = await AsyncStorage.getItem('USERID')
 
@@ -51,20 +54,20 @@ class StudentDashboard extends React.Component {
  render() {
 
    const { userid, challenge, graphQLError, networkError, isVisibleNet, isVisibleGraph } = this.state
-
+   console.log(userid)
     return (
       <View style={styles.container}>
       <ScrollView>
 
-          <Query query={USER_COURSE_QUERY} variables={{ userid: userid }} >
+          <Query query={NEW_USER_COURSE_QUERY} variables={{ userid: userid }} >
                 {({ loading, error, data }) => {
                   if (loading) return <SpinnerLoading1 />
                   if (error) return <Error {...error}/>
 
                   const userToRender = data.user
-                  const fullName = userToRender.firstName + ' ' + userToRender.lastName
-                  const studentCourses = userToRender.studentCourses.filter(course => !course.deleted)
-
+                  const fullName = ''
+                  const activeCourses = userToRender.studentCourses.filter(course => !course.deleted)
+                  const newQuestions = userToRender.questionsSentTo.filter(item => item.questionAnswers.length < 1)
 
                   return (
                     <>
@@ -73,10 +76,13 @@ class StudentDashboard extends React.Component {
                     image='../assets/RNFirebase.png'
                     />
 
+                    <NewQuestions
+                    newQuestions={newQuestions}
+                    navigation={this.props.navigation} />
+
                     <Courses
-                    classes={studentCourses}
                     navigation={this.props.navigation}
-                    />
+                    classes={activeCourses} />
 
                     {isVisibleGraph && <ErrorMutation error={this.state.graphQLError} />}
 

@@ -82,6 +82,12 @@ export default class TestDashboard extends React.Component {
           />
 
           <ButtonColor
+          title="Course Dashboard"
+          backgroundcolor="#003366"
+          onpress={() => this.props.navigation.navigate('ClassDashboard', { courseId: testToRender.course.id })}
+          />
+
+          <ButtonColor
           title="Dashboard"
           backgroundcolor="#003366"
           onpress={() => this.props.navigation.navigate('StudentDashboard')}
