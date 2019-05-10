@@ -141,9 +141,10 @@ class SignIn extends React.Component {
 
     if (user.role === 'STUDENT') {
       this.props.navigation.navigate('StudentDashboard')
-    } else {
-      authMsg = 'If you are a teacher or adminstrator, please login with your teacher app.'
-      this.setState({authMsg:authMsg, isVisibleAuth:true})
+    }
+
+    if (user.role === 'TEACHER') {
+      this.props.navigation.navigate('TeacherDashboard')
     }
 
   }

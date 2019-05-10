@@ -65,3 +65,12 @@ buck-out/
 # RNFirebaseStarter
 yarn.lock
 package-lock.json
+
+# Deployment
+*.cer
+*.jsbundle
+*.jsbundle.meta
+*dSYM.zip
+*.keystore
+*.mobileprovision
+fastlane/report.xml

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>mobile.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>BF186408CD284ADB668DFDEC4B224B92BADFD30E</string>
+				<key>dateExpires</key>
+				<string>3/18/20</string>
+				<key>type</key>
+				<string>iOS Development</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>K88KJEQGP3.com.quandrio.student</string>
+				<key>aps-environment</key>
+				<string>development</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>K88KJEQGP3</string>
+				<key>get-task-allow</key>
+				<true/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>K88KJEQGP3.com.quandrio.mobile</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>mobile.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>0d0d2c98-b8f5-4abd-bfce-b888a53936ef</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: com.quandrio.student</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>K88KJEQGP3</string>
+				<key>name</key>
+				<string>Evan Goodwin</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

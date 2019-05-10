@@ -1,6 +1,8 @@
 PODS:
+  - boost-for-react-native (1.63.0)
   - Crashlytics (3.12.0):
     - Fabric (~> 1.9.0)
+  - DoubleConversion (1.1.6)
   - Fabric (1.9.0)
   - Firebase/Core (5.20.2):
     - Firebase/CoreOnly
@@ -70,6 +72,11 @@ PODS:
     - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 5.2)
     - GTMSessionFetcher/Core (~> 1.1)
+  - Folly (2018.10.22.00):
+    - boost-for-react-native
+    - DoubleConversion
+    - glog
+  - glog (0.3.5)
   - GoogleAppMeasurement (5.8.1):
     - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
     - GoogleUtilities/MethodSwizzler (~> 5.2)
@@ -119,7 +126,23 @@ PODS:
     - React
   - React/Core (0.58.0-rc.2):
     - yoga (= 0.58.0-rc.2.React)
+  - React/CxxBridge (0.58.0-rc.2):
+    - Folly (= 2018.10.22.00)
+    - React/Core
+    - React/cxxreact
+    - React/jsiexecutor
+  - React/cxxreact (0.58.0-rc.2):
+    - boost-for-react-native (= 1.63.0)
+    - Folly (= 2018.10.22.00)
+    - React/jsinspector
   - React/fishhook (0.58.0-rc.2)
+  - React/jsi (0.58.0-rc.2):
+    - Folly (= 2018.10.22.00)
+  - React/jsiexecutor (0.58.0-rc.2):
+    - Folly (= 2018.10.22.00)
+    - React/cxxreact
+    - React/jsi
+  - React/jsinspector (0.58.0-rc.2)
   - React/RCTActionSheet (0.58.0-rc.2):
     - React/Core
   - React/RCTAnimation (0.58.0-rc.2):
@@ -159,14 +182,18 @@ PODS:
 
 DEPENDENCIES:
   - Crashlytics (~> 3.12.0)
+  - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Fabric (~> 1.9.0)
   - Firebase/Core (~> 5.20.1)
   - Firebase/Messaging (~> 5.20.1)
   - Firebase/Performance (~> 5.20.1)
   - Firebase/RemoteConfig (~> 5.20.1)
   - Firebase/Storage (~> 5.20.1)
+  - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
+  - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - React/Core (from `../node_modules/react-native`)
+  - React/CxxBridge (from `../node_modules/react-native`)
   - React/RCTActionSheet (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
   - React/RCTGeolocation (from `../node_modules/react-native`)
@@ -186,6 +213,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - boost-for-react-native
     - Crashlytics
     - Fabric
     - Firebase
@@ -207,6 +235,12 @@ SPEC REPOS:
     - Protobuf
 
 EXTERNAL SOURCES:
+  DoubleConversion:
+    :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  Folly:
+    :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
+  glog:
+    :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
   react-native-camera:
@@ -225,7 +259,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
 SPEC CHECKSUMS:
+  boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
   FirebaseABTesting: 1f50b8d50f5e3469eea54e7463a7b7fe221d1f5e
@@ -238,6 +274,8 @@ SPEC CHECKSUMS:
   FirebasePerformance: 25ecee2a260bcf398d7f32d6f4804438df953100
   FirebaseRemoteConfig: 7e11c65f0769c09bff6947997c209515058c5318
   FirebaseStorage: 6162ef4322502b818d9de0ec552f5226d283de43
+  Folly: de497beb10f102453a1afa9edbf8cf8a251890de
+  glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
   GoogleToolboxForMac: ff31605b7d66400dcec09bed5861689aebadda4d
   GoogleUtilities: 04fce34bcd5620c1ee76fb79172105c74a4df335
@@ -253,6 +291,6 @@ SPEC CHECKSUMS:
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   yoga: 77ef683428c2437b3252e0edbc9f15198e1a1d44
 
-PODFILE CHECKSUM: 4d1ce6f15af8d5e4b0e8b0f1868dc143e6cc2047
+PODFILE CHECKSUM: 600f4a51f02816aab03a49be6aafa132fdc9ca7d
 
 COCOAPODS: 1.6.1
